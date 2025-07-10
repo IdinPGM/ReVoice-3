@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Main : MonoBehaviour
+public class Camera : MonoBehaviour
 {
     [SerializeField] private RawImage img = default;
 
