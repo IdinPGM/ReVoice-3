@@ -970,7 +970,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You're Welcome!
+  m_text: Welcome!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e64ef345d19a0b14c8f3d3e9ddf3e611, type: 2}
   m_sharedMaterial: {fileID: -6476736383381522751, guid: e64ef345d19a0b14c8f3d3e9ddf3e611, type: 2}
