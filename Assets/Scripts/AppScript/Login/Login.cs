@@ -1,11 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Text;
-using System;
 
 public class Login : MonoBehaviour
 {
