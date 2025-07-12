@@ -24,6 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Facial Detection.unity
     guid: e9b40d025d4029a4da3fe8bbbd022b29
   m_configObjects:
-    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 423fbbb89b0db044cbf2e6d93b501ba9, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f43dea6f29bbf3048a69f4ca7c9cd4cf, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
