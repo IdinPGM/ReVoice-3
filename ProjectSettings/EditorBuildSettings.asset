@@ -18,11 +18,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Home.unity
     guid: 1cc8a49cbfb8f8e418abe01ef4c3b21d
   - enabled: 1
+    path: Assets/Scenes/Avatar.unity
+    guid: 839722039a7bef64e85d41bf6fc22bf3
+  - enabled: 1
     path: Assets/Scenes/Daily Missions.unity
     guid: 92bd7e6ec1e66ad41aee5c6990932098
   - enabled: 1
+    path: Assets/Scenes/Phoneme Practice.unity
+    guid: 01107438edb72964786fbd885f3ccb40
+  - enabled: 1
+    path: Assets/Scenes/Language Therapy.unity
+    guid: 8641ab6b5895de64f8c9beb7392bbef5
+  - enabled: 1
     path: Assets/Scenes/Difficulty Selection.unity
     guid: 22db3afe4c09d2c4895b4595820cef14
+  - enabled: 1
+    path: Assets/Scenes/Select Level.unity
+    guid: c74dc9be42792884fa8acfc4d6c08825
   - enabled: 1
     path: Assets/Scenes/Facial Detection.unity
     guid: e9b40d025d4029a4da3fe8bbbd022b29

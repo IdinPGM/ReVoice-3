@@ -628,7 +628,7 @@ GameObject:
   - component: {fileID: 498364248}
   - component: {fileID: 498364247}
   - component: {fileID: 498364246}
-  - component: {fileID: 498364245}
+  - component: {fileID: 498364249}
   m_Layer: 5
   m_Name: Backtoward
   m_TagString: Untagged
@@ -655,24 +655,6 @@ RectTransform:
   m_AnchoredPosition: {x: 160, y: -130.07013}
   m_SizeDelta: {x: 128, y: 125}
   m_Pivot: {x: 0.49999988, y: 0.49999905}
---- !u!114 &498364245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 498364243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6246e0f05be05c43a0c391257c19dd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Button: {fileID: 0}
-  HomePage: {fileID: 0}
-  HistoryPage: {fileID: 0}
-  CustomModePage: {fileID: 0}
-  GamePage: {fileID: 0}
-  AccountSettingPage: {fileID: 0}
 --- !u!114 &498364246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,16 +699,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 498364245}
-        m_TargetAssemblyTypeName: BacktoHomepage, Assembly-CSharp
-        m_MethodName: BackTowardToHome
-        m_Mode: 1
+      - m_Target: {fileID: 498364249}
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Home
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &498364247
@@ -767,6 +749,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498364243}
   m_CullTransparentMesh: 1
+--- !u!114 &498364249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498364243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &575818034
 GameObject:
   m_ObjectHideFlags: 0

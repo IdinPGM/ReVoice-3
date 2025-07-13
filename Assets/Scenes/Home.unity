@@ -4184,6 +4184,7 @@ GameObject:
   - component: {fileID: 1564086720}
   - component: {fileID: 1564086719}
   - component: {fileID: 1564086718}
+  - component: {fileID: 1564086721}
   m_Layer: 5
   m_Name: Phoneme Practice
   m_TagString: Untagged
@@ -4253,7 +4254,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1564086719}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1564086721}
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Phoneme Practice
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1564086719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4292,6 +4305,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564086716}
   m_CullTransparentMesh: 1
+--- !u!114 &1564086721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564086716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1566930196
 GameObject:
   m_ObjectHideFlags: 0
@@ -4911,6 +4936,7 @@ GameObject:
   - component: {fileID: 1675621065}
   - component: {fileID: 1675621064}
   - component: {fileID: 1675621063}
+  - component: {fileID: 1675621066}
   m_Layer: 5
   m_Name: Exchange Shop
   m_TagString: Untagged
@@ -4980,7 +5006,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1675621064}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1675621066}
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Avatar
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1675621064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5019,6 +5057,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1675621061}
   m_CullTransparentMesh: 1
+--- !u!114 &1675621066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675621061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1684000420
 GameObject:
   m_ObjectHideFlags: 0
@@ -6615,6 +6665,7 @@ GameObject:
   - component: {fileID: 2071072069}
   - component: {fileID: 2071072068}
   - component: {fileID: 2071072067}
+  - component: {fileID: 2071072070}
   m_Layer: 5
   m_Name: Language Therapy
   m_TagString: Untagged
@@ -6684,7 +6735,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2071072068}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2071072070}
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Language Therapy
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2071072068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6723,6 +6786,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071072065}
   m_CullTransparentMesh: 1
+--- !u!114 &2071072070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071072065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2106947403
 GameObject:
   m_ObjectHideFlags: 0
@@ -6732,6 +6807,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2106947404}
+  - component: {fileID: 2106947405}
   m_Layer: 5
   m_Name: Gamepage
   m_TagString: Untagged
@@ -6760,6 +6836,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2106947405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106947403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb40282844091f458fb11659b0188b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facialDetectionButton: {fileID: 35035333}
+  functionalSpeechButton: {fileID: 516098054}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
