@@ -6,14 +6,10 @@ using TMPro;
 public class FunctionalSpeech : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] private Button recordButton;
-    [SerializeField] private Button nextButton;
-    [SerializeField] private Button skipButton;
-    [SerializeField] private Button voiceButton;
-    [SerializeField] private TMP_Text targetText;
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private RawImage WebcamImage;
-    [SerializeField] private TMP_Text feedbackText;
+    [SerializeField] private Button recordButton, nextButton, skipButton, voiceButton;
+    [SerializeField] private TMP_Text targetText, descriptionText, feedbackText;
+    [SerializeField] private RawImage WebcamImage, feedbackBox;
+
 
     private AudioClip recordedClip;
     [SerializeField] AudioSource audioSource;
@@ -30,20 +26,68 @@ public class FunctionalSpeech : MonoBehaviour
         public string feedback;
     }
 
+    [System.Serializable]
+    public class Stage
+    {
+        public int number;
+        public string target;
+        public string description;
+        public string image;
+    }
+
+    [System.Serializable]
+    public class StageDataWrapper
+    {
+        public Stage[] stages;
+    }
+
+    private Stage[] stages;
+    private int currentStageIndex = 0;
+
     private void Start()
     {
         webCam = new WebCamTexture();
         if (!webCam.isPlaying) webCam.Play();
         WebcamImage.texture = webCam;
 
+        // 1. อ่าน JSON จาก PlayerPrefs
+        string json = PlayerPrefs.GetString("stageData", "");
+        if (!string.IsNullOrEmpty(json))
+        {
+            // 2. แปลงเป็น StageDataWrapper
+            StageDataWrapper wrapper = JsonUtility.FromJson<StageDataWrapper>(json);
+            stages = wrapper.stages;
+        }
+
         recordButton.onClick.AddListener(StartRecording);
         nextButton.onClick.AddListener(OnNextButtonClicked);
         skipButton.onClick.AddListener(OnSkipButtonClicked);
         voiceButton.onClick.AddListener(OnVoiceButtonClicked);
-        nextButton.gameObject.SetActive(false);
+        // nextButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
+    
+        LoadCurrentStage(); // แสดงข้อมูลของ Stage ปัจจุบัน
         Invoke("Show", 15f);
+    }
+
+    private void LoadCurrentStage()
+    {
+        if (stages == null || stages.Length == 0) return;
+
+        // อ่านหมายเลข stage ล่าสุด
+        int stageNumber = PlayerPrefs.GetInt("stageNumber", 0);
+
+        // หา index ในอาเรย์ที่มี number ตรงกับ stageNumber
+        currentStageIndex = System.Array.FindIndex(stages, s => s.number == stageNumber);
+        if (currentStageIndex < 0) currentStageIndex = 0;
+
+        // อัพเดต UI
+        targetText.text = stages[currentStageIndex].target;
+        descriptionText.text = stages[currentStageIndex].description;
+
+        // ถ้าต้องการโหลดรูปจาก URL ให้ใช้ UnityWebRequestTexture
+        // StartCoroutine(LoadImage(stages[currentStageIndex].image));
     }
 
     public void StartRecording()
@@ -97,6 +141,8 @@ public class FunctionalSpeech : MonoBehaviour
             },
             onError: (error, code) => {
                 Debug.LogError($"Error: {error}, Code: {code}");
+                feedbackBox.gameObject.SetActive(true);
+                feedbackText.gameObject.SetActive(true);
                 feedbackText.text = "An error occurred while processing your response.";
             },
             audioClip: recordedClip,
@@ -125,13 +171,15 @@ public class FunctionalSpeech : MonoBehaviour
         if (response.isPassed)
         {
             Debug.Log("Answer is correct");
+            feedbackBox.gameObject.SetActive(true);
             feedbackText.gameObject.SetActive(true);
             feedbackText.text = "Correct!";
-            nextButton.gameObject.SetActive(true);
+            // nextButton.gameObject.SetActive(true);
         }
         else
         {
             Debug.Log("Answer is incorrect");
+            feedbackBox.gameObject.SetActive(true);
             feedbackText.gameObject.SetActive(true);
             feedbackText.text = "Incorrect. " + response.feedback;
         }
@@ -158,7 +206,7 @@ public class FunctionalSpeech : MonoBehaviour
         // (ถ้าจำเป็น สามารถเพิ่ม logic การจบเกมที่นี่)
         
         // อัปเดต UI หรือโหลด stage ถัดไป
-        // LoadNextStage();
+        LoadCurrentStage();
     }
 
     private void OnSkipButtonClicked()
@@ -173,7 +221,7 @@ public class FunctionalSpeech : MonoBehaviour
         Debug.Log($"Skip button clicked. Stage number updated to: {nextStage}");
         
         // โหลด stage ถัดไป
-        // LoadNextStage();
+        LoadCurrentStage();
     }
 
     private void Show()
