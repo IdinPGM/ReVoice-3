@@ -1199,7 +1199,6 @@ GameObject:
   - component: {fileID: 1018712065}
   - component: {fileID: 1018712068}
   - component: {fileID: 1018712067}
-  - component: {fileID: 1018712066}
   m_Layer: 5
   m_Name: Camera Ratio
   m_TagString: Untagged
@@ -1226,19 +1225,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0000076294, y: -433}
   m_SizeDelta: {x: 779.538, y: 629.402}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1018712066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1018712064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bf36c63282aadf4caf959d04e42f04f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  img: {fileID: 1018712067}
 --- !u!114 &1018712067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,7 +1238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.33490568, g: 0.7698322, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1938,7 +1924,7 @@ MonoBehaviour:
   targetText: {fileID: 362023824}
   descriptionText: {fileID: 1139643293}
   feedbackText: {fileID: 2126168634}
-  WebcamImage: {fileID: 1018712067}
+  webcamImage: {fileID: 1018712067}
   feedbackBox: {fileID: 2138915955}
   audioSource: {fileID: 1107985544}
 --- !u!1 &2035725418

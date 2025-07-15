@@ -3632,15 +3632,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 501817737}
-        m_TargetAssemblyTypeName: BacktoHomepage, Assembly-CSharp
-        m_MethodName: BackTowardToHome
-        m_Mode: 1
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Home
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &501817735
@@ -3690,15 +3690,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 501817732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6246e0f05be05c43a0c391257c19dd2, type: 3}
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 0}
-  HomePage: {fileID: 1861435788}
-  HistoryPage: {fileID: 1030012287}
-  CustomModePage: {fileID: 153338681}
-  GamePage: {fileID: 2106947403}
-  AccountSettingPage: {fileID: 784314224}
 --- !u!1 &503342495
 GameObject:
   m_ObjectHideFlags: 0
@@ -7508,15 +7502,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1122153167}
-        m_TargetAssemblyTypeName: BacktoHomepage, Assembly-CSharp
-        m_MethodName: BackTowardToHome
-        m_Mode: 1
+        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Home
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1122153165
@@ -7566,15 +7560,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1122153162}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6246e0f05be05c43a0c391257c19dd2, type: 3}
+  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 0}
-  HomePage: {fileID: 1861435788}
-  HistoryPage: {fileID: 1030012287}
-  CustomModePage: {fileID: 153338681}
-  GamePage: {fileID: 2106947403}
-  AccountSettingPage: {fileID: 784314224}
 --- !u!1 &1151259626
 GameObject:
   m_ObjectHideFlags: 0

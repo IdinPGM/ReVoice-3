@@ -8,7 +8,9 @@ public class FunctionalSpeech : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Button recordButton, nextButton, skipButton, voiceButton;
     [SerializeField] private TMP_Text targetText, descriptionText, feedbackText;
-    [SerializeField] private RawImage WebcamImage, feedbackBox;
+    [SerializeField] private RawImage webcamImage = default, feedbackBox;
+
+    private WebCamTexture webCam;
 
 
     private AudioClip recordedClip;
@@ -16,7 +18,6 @@ public class FunctionalSpeech : MonoBehaviour
     private float startTime;
     private float recordingLength = 8f; // Duration of recording in seconds
 
-    private WebCamTexture webCam;
 
     [System.Serializable]
     public class forwardResponse
@@ -48,7 +49,7 @@ public class FunctionalSpeech : MonoBehaviour
     {
         webCam = new WebCamTexture();
         if (!webCam.isPlaying) webCam.Play();
-        WebcamImage.texture = webCam;
+        webcamImage.texture = webCam;
 
         // 1. อ่าน JSON จาก PlayerPrefs
         string json = PlayerPrefs.GetString("stageData", "");
@@ -66,9 +67,9 @@ public class FunctionalSpeech : MonoBehaviour
         // nextButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
+        feedbackBox.gameObject.SetActive(false);
     
         LoadCurrentStage(); // แสดงข้อมูลของ Stage ปัจจุบัน
-        Invoke("Show", 15f);
     }
 
     private void LoadCurrentStage()
@@ -88,6 +89,7 @@ public class FunctionalSpeech : MonoBehaviour
 
         // ถ้าต้องการโหลดรูปจาก URL ให้ใช้ UnityWebRequestTexture
         // StartCoroutine(LoadImage(stages[currentStageIndex].image));
+        Invoke("ShowSkip", 15f);
     }
 
     public void StartRecording()
@@ -121,10 +123,6 @@ public class FunctionalSpeech : MonoBehaviour
         recordedClip = TrimClip(recordedClip, recordingLength);
         Debug.Log("Recording stopped.");
 
-
-        // Make the record button inactive
-        recordButton.gameObject.SetActive(false);
-
         var formData = new Dictionary<string, object>
         {
             { "sessionId", PlayerPrefs.GetString("sessionId", string.Empty) },
@@ -139,7 +137,8 @@ public class FunctionalSpeech : MonoBehaviour
             onSuccess: (response) => {
                 checkAnswer(response);
             },
-            onError: (error, code) => {
+            onError: (error, code) =>
+            {
                 Debug.LogError($"Error: {error}, Code: {code}");
                 feedbackBox.gameObject.SetActive(true);
                 feedbackText.gameObject.SetActive(true);
@@ -224,17 +223,9 @@ public class FunctionalSpeech : MonoBehaviour
         LoadCurrentStage();
     }
 
-    private void Show()
+    private void ShowSkip()
     {
         skipButton.gameObject.SetActive(true);
-    }
-    
-    private void OnDestroyCamera()
-    {
-        if (webCam != null && webCam.isPlaying)
-        {
-            webCam.Stop();
-        }
     }
 }
 
