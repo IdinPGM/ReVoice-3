@@ -10530,6 +10530,8 @@ GameObject:
   - component: {fileID: 1603796140}
   - component: {fileID: 1603796142}
   - component: {fileID: 1603796141}
+  - component: {fileID: 1603796143}
+  - component: {fileID: 1603796144}
   m_Layer: 5
   m_Name: Streak - Button
   m_TagString: Untagged
@@ -10596,6 +10598,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603796139}
   m_CullTransparentMesh: 1
+--- !u!114 &1603796143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603796139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5239ed23f7cc4a87a1fc10f0cea01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  streakText: {fileID: 762338515}
+--- !u!114 &1603796144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603796139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6246e0f05be05c43a0c391257c19dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Button: {fileID: 1603796139}
+  HomePage: {fileID: 1861435788}
+  HistoryPage: {fileID: 1030012287}
+  CustomModePage: {fileID: 153338681}
+  GamePage: {fileID: 2106947403}
+  AccountSettingPage: {fileID: 784314224}
 --- !u!1 &1633030180
 GameObject:
   m_ObjectHideFlags: 0
