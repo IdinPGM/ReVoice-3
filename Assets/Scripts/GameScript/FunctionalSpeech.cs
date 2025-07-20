@@ -64,7 +64,9 @@ public class FunctionalSpeech : MonoBehaviour
         nextButton.onClick.AddListener(OnNextButtonClicked);
         skipButton.onClick.AddListener(OnSkipButtonClicked);
         voiceButton.onClick.AddListener(OnVoiceButtonClicked);
-        // nextButton.gameObject.SetActive(false);
+        
+        // Initial UI state
+        nextButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
         feedbackBox.gameObject.SetActive(false);
@@ -87,9 +89,15 @@ public class FunctionalSpeech : MonoBehaviour
         targetText.text = stages[currentStageIndex].target;
         descriptionText.text = stages[currentStageIndex].description;
 
+        // Reset UI state
+        nextButton.gameObject.SetActive(false);
+        skipButton.gameObject.SetActive(false);
+        feedbackText.gameObject.SetActive(false);
+        feedbackBox.gameObject.SetActive(false);
+
         // ถ้าต้องการโหลดรูปจาก URL ให้ใช้ UnityWebRequestTexture
         // StartCoroutine(LoadImage(stages[currentStageIndex].image));
-        Invoke("ShowSkip", 15f);
+        Invoke("ShowSkip", 10f);
     }
 
     public void StartRecording()
@@ -108,6 +116,13 @@ public class FunctionalSpeech : MonoBehaviour
             recordButton.onClick.RemoveListener(StartRecording);
             recordButton.onClick.AddListener(StopRecording);
 
+            // Update button text/visual to indicate recording
+            var recordButtonText = recordButton.GetComponentInChildren<TMP_Text>();
+            if (recordButtonText != null)
+            {
+                recordButtonText.text = "หยุดบันทึก";
+            }
+
 
         }
         else
@@ -122,6 +137,13 @@ public class FunctionalSpeech : MonoBehaviour
         recordingLength = Time.realtimeSinceStartup - startTime;
         recordedClip = TrimClip(recordedClip, recordingLength);
         Debug.Log("Recording stopped.");
+
+        // Update button text back to record
+        var recordButtonText = recordButton.GetComponentInChildren<TMP_Text>();
+        if (recordButtonText != null)
+        {
+            recordButtonText.text = "บันทึกเสียง";
+        }
 
         var formData = new Dictionary<string, object>
         {
@@ -142,7 +164,7 @@ public class FunctionalSpeech : MonoBehaviour
                 Debug.LogError($"Error: {error}, Code: {code}");
                 feedbackBox.gameObject.SetActive(true);
                 feedbackText.gameObject.SetActive(true);
-                feedbackText.text = "An error occurred while processing your response.";
+                feedbackText.text = "เกิดข้อผิดพลาดในการประมวลผล กรุณาลองใหม่อีกครั้ง";
             },
             audioClip: recordedClip,
             audioFieldName: "value"
@@ -167,27 +189,44 @@ public class FunctionalSpeech : MonoBehaviour
 
     private void checkAnswer(forwardResponse response)
     {
+        feedbackBox.gameObject.SetActive(true);
+        feedbackText.gameObject.SetActive(true);
+
         if (response.isPassed)
         {
             Debug.Log("Answer is correct");
-            feedbackBox.gameObject.SetActive(true);
-            feedbackText.gameObject.SetActive(true);
-            feedbackText.text = "Correct!";
-            // nextButton.gameObject.SetActive(true);
+            feedbackText.text = "ยอดเยี่ยม! คุณพูดได้ถูกต้อง";
+            nextButton.gameObject.SetActive(true);
+            CancelInvoke("ShowSkip"); // Cancel skip button if passed
         }
         else
         {
             Debug.Log("Answer is incorrect");
-            feedbackBox.gameObject.SetActive(true);
-            feedbackText.gameObject.SetActive(true);
-            feedbackText.text = "Incorrect. " + response.feedback;
+            feedbackText.text = "ลองใหม่อีกครั้ง: " + response.feedback;
+            // Hide feedback after a few seconds to allow retry
+            Invoke("HideFeedback", 3f);
         }
+    }
+
+    private void HideFeedback()
+    {
+        feedbackBox.gameObject.SetActive(false);
+        feedbackText.gameObject.SetActive(false);
     }
 
     private void OnVoiceButtonClicked()
     {
-        // Logic to handle voice button click
-        Debug.Log("Voice button clicked");
+        // Play pronunciation example audio
+        Debug.Log("Playing example audio");
+        
+        // If you have an audio source for pronunciation examples
+        if (audioSource != null && audioSource.clip != null)
+        {
+            audioSource.Play();
+        }
+        
+        // Or you could load audio from server/resources based on current stage
+        // StartCoroutine(LoadAndPlayAudio(stages[currentStageIndex].audioUrl));
     }
 
     private void OnNextButtonClicked()
@@ -201,8 +240,13 @@ public class FunctionalSpeech : MonoBehaviour
         
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
         
-        // เพิ่มการตรวจสอบว่าเป็น stage สุดท้ายหรือไม่
-        // (ถ้าจำเป็น สามารถเพิ่ม logic การจบเกมที่นี่)
+        // Check if this is the last stage
+        if (nextStage >= stages.Length)
+        {
+            Debug.Log("Functional Speech completed!");
+            // Return to history or main menu
+            return;
+        }
         
         // อัปเดต UI หรือโหลด stage ถัดไป
         LoadCurrentStage();
@@ -219,13 +263,31 @@ public class FunctionalSpeech : MonoBehaviour
         
         Debug.Log($"Skip button clicked. Stage number updated to: {nextStage}");
         
+        // Check if this is the last stage
+        if (nextStage >= stages.Length)
+        {
+            Debug.Log("Functional Speech completed!");
+            return;
+        }
+        
         // โหลด stage ถัดไป
         LoadCurrentStage();
     }
 
     private void ShowSkip()
     {
-        skipButton.gameObject.SetActive(true);
+        if (!nextButton.gameObject.activeSelf) // Only show skip if not passed yet
+        {
+            skipButton.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (webCam != null && webCam.isPlaying)
+        {
+            webCam.Stop();
+        }
     }
 }
 

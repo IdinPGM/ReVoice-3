@@ -45,6 +45,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Streak Calendar.unity
     guid: c3d293f280e217146b4060808f79416d
   m_configObjects:
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 768e24a99ce5a314d968014c546d9e98, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 801a185d4353e3f4fab3318b489a3905, type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: 2dbeea5cd4091194893cab4ea1c7db01, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f43dea6f29bbf3048a69f4ca7c9cd4cf, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

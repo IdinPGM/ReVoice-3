@@ -113,7 +113,7 @@ public static class HttpHelper
         Action<TResponse> onSuccess,
         Action<string, long> onError,
         AudioClip audioClip = null,
-        string audioFieldName = "audio",
+        string audioFieldName = "value",
         Dictionary<string, string> additionalHeaders = null
     )
     {
@@ -174,6 +174,73 @@ public static class HttpHelper
             }
         }
         
+    }
+
+    public static IEnumerator PostImageCoroutine<TResponse>(
+        string endpoint,
+        Dictionary<string, object> formData,
+        Action<TResponse> onSuccess,
+        Action<string, long> onError,
+        byte[] imageData = null,
+        string imageFieldName = "image",
+        Dictionary<string, string> additionalHeaders = null
+    )
+    {
+        WWWForm form = new WWWForm();
+
+        if (imageData != null)
+        {
+            form.AddBinaryData(imageFieldName, imageData, $"{imageFieldName}.jpg", "image/jpeg");
+        }
+
+        if (formData != null)
+        {
+            foreach (var kvp in formData)
+            {
+                if (kvp.Value != null)
+                {
+                    form.AddField(kvp.Key, kvp.Value.ToString());
+                }
+            }
+        }
+
+        using (UnityWebRequest request = UnityWebRequest.Post(endpoint, form))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            if (additionalHeaders != null)
+            {
+                foreach (var header in additionalHeaders)
+                {
+                    request.SetRequestHeader(header.Key, header.Value);
+                }
+            }
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"Image Upload Success: {request.downloadHandler.text}");
+
+                try
+                {
+                    TResponse response = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
+                    Debug.Log($"Response: {response}");
+                    onSuccess?.Invoke(response);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"JSON Parsing Error: {ex.Message}");
+                    onError?.Invoke($"Failed to parse response: {ex.Message}", request.responseCode);
+                }
+            }
+            else
+            {
+                string errorMessage = request.error;
+                Debug.LogError($"Image Upload Error: {errorMessage}");
+                onError?.Invoke(errorMessage, request.responseCode);
+            }
+        }
     }
 
     // public static IEnumerator PostAudioFileCoroutine<TResponse>(
