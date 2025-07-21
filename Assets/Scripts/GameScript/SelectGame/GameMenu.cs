@@ -6,13 +6,13 @@ public class GameMenu : MonoBehaviour
 {
     [SerializeField] Button facialDetectionButton;
     [SerializeField] Button functionalSpeechButton;
-    // [SerializeField] Button phonemePracticeButton;
+    [SerializeField] Button phonemePracticeButton;
     // [SerializeField] Button languageTherapyButton;
 
     // Define Game IDs for each game mode
     private const string FACIAL_DETECTION_ID = "facial_detection";
     private const string FUNCTIONAL_SPEECH_ID = "functional_speech";
-    // private const string PHONEME_PRACTICE_ID = "phoneme_practice";
+    private const string PHONEME_PRACTICE_ID = "phoneme_practice";
     // private const string LANGUAGE_THERAPY_ID = "language_therapy";
 
     private void Start()
@@ -29,7 +29,7 @@ public class GameMenu : MonoBehaviour
         // Assign button click events
         facialDetectionButton.onClick.AddListener(() => GoToDifficultySelection(FACIAL_DETECTION_ID));
         functionalSpeechButton.onClick.AddListener(() => GoToDifficultySelection(FUNCTIONAL_SPEECH_ID));
-        // phonemePracticeButton.onClick.AddListener(() => GoToDifficultySelection(PHONEME_PRACTICE_ID));
+        phonemePracticeButton.onClick.AddListener(() => GoToDifficultySelection(PHONEME_PRACTICE_ID));
         // languageTherapyButton.onClick.AddListener(() => GoToDifficultySelection(LANGUAGE_THERAPY_ID));
     }
 
