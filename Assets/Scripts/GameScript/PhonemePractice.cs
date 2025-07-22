@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PhonemePractice : MonoBehaviour
 {
@@ -234,11 +235,12 @@ public class PhonemePractice : MonoBehaviour
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
         
         // Check if this is the last stage
-        if (nextStage >= stages.Length)
+        if (nextStage >= 4)
         {
-            Debug.Log("Phoneme Practice completed!");
+            Debug.Log("Phoneme Practi completed!");
+            OnDestroy();
             // Return to history or main menu
-            return;
+            SceneManager.LoadScene("History");
         }
         
         LoadCurrentStage();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public abstract class BaseSpeechGame : MonoBehaviour
 {
@@ -259,10 +260,12 @@ public abstract class BaseSpeechGame : MonoBehaviour
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
         
         // Check if this is the last stage
-        if (nextStage >= stages.Length)
+        if (nextStage >= 4)
         {
             Debug.Log($"{GameName} completed!");
             OnGameCompleted();
+            OnDestroy();
+            SceneManager.LoadScene("History");
             return;
         }
         

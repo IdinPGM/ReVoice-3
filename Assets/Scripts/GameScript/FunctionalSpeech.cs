@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public class FunctionalSpeech : MonoBehaviour
 {
@@ -239,13 +241,14 @@ public class FunctionalSpeech : MonoBehaviour
         PlayerPrefs.Save();
         
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
-        
+
         // Check if this is the last stage
-        if (nextStage >= stages.Length)
+        if (nextStage >= 4)
         {
             Debug.Log("Functional Speech completed!");
+            OnDestroy();
             // Return to history or main menu
-            return;
+            SceneManager.LoadScene("History");
         }
         
         // อัปเดต UI หรือโหลด stage ถัดไป
