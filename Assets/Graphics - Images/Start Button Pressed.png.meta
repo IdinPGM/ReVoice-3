@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3d2a29d5c6a366d47aab8a9d86cab639
+guid: ad0deb1cdce07b142aaf28f3c52c5ae8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4100084843955629340
-    second: Back to gamemode_0
+      213: 7167754988936810214
+    second: Start Button Pressed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Back to gamemode_0
+      name: Start Button Pressed_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 634
-        height: 152
+        width: 525
+        height: 132
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4e2df0fbe829917c0800000000000000
-      internalID: -4100084843955629340
+      spriteID: 6eecc90af2bf87360800000000000000
+      internalID: 7167754988936810214
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Back to gamemode_0: -4100084843955629340
+      Start Button Pressed_0: 7167754988936810214
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
