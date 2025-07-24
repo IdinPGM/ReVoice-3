@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3b5979c0ad1975941baeaf3cf2c7629c
+guid: 611ba66ab2bc3154d8deda544783e6da
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -570517330028172382
-    second: Tap to speak_0
+      213: 3227395149721217280
+    second: Minigame background Opacity - 100%_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tap to speak_0
+      name: Minigame background Opacity - 100%_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 700
-        height: 116
+        width: 780
+        height: 1688
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ab6775d28d1518f0800000000000000
-      internalID: -570517330028172382
+      spriteID: 009a3f80ac20acc20800000000000000
+      internalID: 3227395149721217280
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tap to speak_0: -570517330028172382
+      Minigame background Opacity - 100%_0: 3227395149721217280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

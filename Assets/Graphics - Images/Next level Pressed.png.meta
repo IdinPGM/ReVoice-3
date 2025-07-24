@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c7d2bcaebf3249e4f9a0ef3feedf45b7
+guid: 63c6a8a9586216c458a2ebab49f9a422
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4604115814155476860
-    second: Tap to Speak (1)_0
+      213: 8625152232750101881
+    second: Next level Pressed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tap to Speak (1)_0
+      name: Next level Pressed_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 198
-        height: 63
+        width: 350
+        height: 54
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 48021888f05ea10c0800000000000000
-      internalID: -4604115814155476860
+      spriteID: 975bcb6f142b2b770800000000000000
+      internalID: 8625152232750101881
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tap to Speak (1)_0: -4604115814155476860
+      Next level Pressed_0: 8625152232750101881
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

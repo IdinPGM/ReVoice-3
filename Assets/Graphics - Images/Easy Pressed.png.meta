@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cfce7ec534c5d1c428070068368a21e1
+guid: c59c7a7f1c2191d4db8f8133d6b2bb88
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1486208589937240367
-    second: Next 100_0
+      213: 2310820772822119611
+    second: Easy Pressed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Next 100_0
+      name: Easy Pressed_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 716
-        height: 126
+        width: 634
+        height: 130
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1d618a6692def5be0800000000000000
-      internalID: -1486208589937240367
+      spriteID: bb4f7a7ef3fa11020800000000000000
+      internalID: 2310820772822119611
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Next 100_0: -1486208589937240367
+      Easy Pressed_0: 2310820772822119611
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
