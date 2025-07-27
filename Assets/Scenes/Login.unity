@@ -1069,6 +1069,7 @@ GameObject:
   - component: {fileID: 526555604}
   - component: {fileID: 526555606}
   - component: {fileID: 526555607}
+  - component: {fileID: 526555608}
   m_Layer: 5
   m_Name: LogIn - Button
   m_TagString: Untagged
@@ -1177,6 +1178,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &526555608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526555601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb00227029e041d4eb4743539a20148e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfx: {fileID: 8300000, guid: 41c5c2b983676c14abbebce504e00d9a, type: 3}
+  audioSource: {fileID: 0}
 --- !u!1 &536400284
 GameObject:
   m_ObjectHideFlags: 0
@@ -2537,6 +2552,7 @@ GameObject:
   - component: {fileID: 2048757340}
   - component: {fileID: 2048757339}
   - component: {fileID: 2048757341}
+  - component: {fileID: 2048757342}
   m_Layer: 5
   m_Name: Register - Button
   m_TagString: Untagged
@@ -2669,6 +2685,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2048757342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048757335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb00227029e041d4eb4743539a20148e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfx: {fileID: 8300000, guid: 41c5c2b983676c14abbebce504e00d9a, type: 3}
+  audioSource: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

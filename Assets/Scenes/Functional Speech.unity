@@ -1780,6 +1780,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d02e91663d837646ad53c6b09a0a440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  webcamImage: {fileID: 1018712067}
+  feedbackBox: {fileID: 2138915955}
   recordButton: {fileID: 506241898}
   nextButton: {fileID: 735118825}
   skipButton: {fileID: 105736456}
@@ -1787,9 +1789,16 @@ MonoBehaviour:
   targetText: {fileID: 362023824}
   descriptionText: {fileID: 1139643293}
   feedbackText: {fileID: 2126168634}
-  webcamImage: {fileID: 1018712067}
-  feedbackBox: {fileID: 2138915955}
   audioSource: {fileID: 1107985544}
+  sfxGameStart: {fileID: 8300000, guid: d296adf47dd0a514fbd36b5ff7df9f9c, type: 3}
+  sfxStartRecording: {fileID: 8300000, guid: 43c2e24f347561d4cb2a399e5468283f, type: 3}
+  sfxStopRecording: {fileID: 8300000, guid: 156d7be9d63eef644933d64e63ed8216, type: 3}
+  sfxCorrectAnswer: {fileID: 8300000, guid: 1be2fcc16ab0da84f99ba7c633037620, type: 3}
+  sfxWrongAnswer: {fileID: 8300000, guid: 16d0788660e724f44ae05e641af1b222, type: 3}
+  sfxShowSkip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
+  sfxNext: {fileID: 8300000, guid: 2a71d8e8ea428e0409d3df636b9f0192, type: 3}
+  sfxSkip: {fileID: 8300000, guid: bf0938dc5667ff34aa2616789bb48a17, type: 3}
+  sfxGameComplete: {fileID: 8300000, guid: 668620113e9d6dc4483ba3d8dbae9fcf, type: 3}
 --- !u!1 &2035725418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1952,7 +1961,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535

@@ -8,13 +8,17 @@ using UnityEngine.SceneManagement;
 public abstract class BaseSpeechGame : MonoBehaviour
 {
     [Header("UI Elements")]
+    [SerializeField] protected RawImage webcamImage;
+    [SerializeField] protected RawImage feedbackBox;
     [SerializeField] protected Button recordButton, nextButton, skipButton, voiceButton;
     [SerializeField] protected TMP_Text targetText, descriptionText, feedbackText;
-    [SerializeField] protected RawImage webcamImage, feedbackBox;
 
     protected WebCamTexture webCam;
     protected AudioClip recordedClip;
+
+    [Header("Sound Effects")]
     [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected AudioClip sfxGameStart, sfxStartRecording, sfxStopRecording, sfxCorrectAnswer, sfxWrongAnswer, sfxShowSkip, sfxNext, sfxSkip, sfxGameComplete;
     protected float startTime;
     protected float recordingLength = 8f;
 
@@ -52,6 +56,7 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     protected virtual void Start()
     {
+        PlaySFX(sfxGameStart);
         InitializeWebcam();
         LoadStageData();
         SetupUI();
@@ -119,6 +124,7 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     public virtual void StartRecording()
     {
+        PlaySFX(sfxStartRecording);
         if (Microphone.devices.Length == 0)
         {
             Debug.LogError("No microphone detected.");
@@ -143,6 +149,7 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     public virtual void StopRecording()
     {
+        PlaySFX(sfxStopRecording);
         Microphone.End(null);
         recordingLength = Time.realtimeSinceStartup - startTime;
         recordedClip = TrimClip(recordedClip, recordingLength);
@@ -219,16 +226,21 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
         if (response.isPassed)
         {
+            PlaySFX(sfxCorrectAnswer);
+            // เปลี่ยนสีให้เป็นเขียวเมื่อผ่าน
+            feedbackText.color = new Color(0.077f, 0.783f, 0.236f);
             Debug.Log($"{GameName} answer is correct");
             feedbackText.text = CorrectMessage + "\nคุณพูดคำว่า " + response.inputValue + "!";
             nextButton.gameObject.SetActive(true);
-            CancelInvoke("ShowSkip"); // Cancel skip button if passed
+            CancelInvoke("ShowSkip");
         }
         else
         {
+            PlaySFX(sfxWrongAnswer);
+            // เปลี่ยนสีให้เป็นแดงเมื่อไม่ผ่าน
+            feedbackText.color = Color.red;
             Debug.Log($"{GameName} answer is incorrect: " + response.feedback);
             feedbackText.text = RetryMessagePrefix + response.feedback + "\nคุณพูดคำว่า " + response.inputValue + "!";
-            // Hide feedback after a few seconds to allow retry
             Invoke("HideFeedback", 3f);
         }
     }
@@ -249,8 +261,18 @@ public abstract class BaseSpeechGame : MonoBehaviour
         }
     }
 
+    protected virtual void ShowSkip()
+    {
+        if (!nextButton.gameObject.activeSelf) // Only show skip if not passed yet
+        {
+            PlaySFX(sfxShowSkip);
+            skipButton.gameObject.SetActive(true);
+        }
+    }
+
     protected virtual void OnNextButtonClicked()
     {
+        PlaySFX(sfxNext);
         int currentStage = PlayerPrefs.GetInt("stageNumber", 0);
         int nextStage = currentStage + 1;
         
@@ -260,12 +282,12 @@ public abstract class BaseSpeechGame : MonoBehaviour
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
         
         // Check if this is the last stage
-        if (nextStage >= 4)
+        if (nextStage >= 3)
         {
             Debug.Log($"{GameName} completed!");
             OnGameCompleted();
-            OnDestroy();
-            SceneManager.LoadScene("History");
+            // Stop webcam and navigate to
+            SceneManager.LoadScene("Home");
             return;
         }
         
@@ -274,6 +296,7 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     protected virtual void OnSkipButtonClicked()
     {
+        PlaySFX(sfxSkip);
         int currentStage = PlayerPrefs.GetInt("stageNumber", 0);
         int nextStage = currentStage + 1;
         
@@ -287,31 +310,30 @@ public abstract class BaseSpeechGame : MonoBehaviour
         {
             Debug.Log($"{GameName} completed!");
             OnGameCompleted();
+            // Stop webcam and navigate to Home
+            SceneManager.LoadScene("Home");
             return;
         }
         
         LoadCurrentStage();
     }
 
-    protected virtual void ShowSkip()
-    {
-        if (!nextButton.gameObject.activeSelf) // Only show skip if not passed yet
-        {
-            skipButton.gameObject.SetActive(true);
-        }
-    }
-
     protected virtual void OnGameCompleted()
     {
-        // Override in child classes for specific completion logic
-        // Could return to main menu, show completion screen, etc.
-    }
-
-    protected virtual void OnDestroy()
-    {
+        PlaySFX(sfxGameComplete);
+        // Stop webcam when game completes
         if (webCam != null && webCam.isPlaying)
         {
             webCam.Stop();
+            webcamImage.texture = null; // Clear webcam texture
         }
+        // Override for additional completion logic if needed
+    }
+
+    // Helper method สำหรับเล่น SFX
+    protected void PlaySFX(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+            audioSource.PlayOneShot(clip);
     }
 }

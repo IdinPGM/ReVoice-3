@@ -1,7 +1,11 @@
 using UnityEngine;
+using System.Collections;
 
 public class ChangeCanvas : MonoBehaviour
 {
+    [Tooltip("Delay in seconds before switching canvas")]
+    public float switchDelay = 0.5f;
+
     public GameObject Button;
     public GameObject HomePage;
     public GameObject HistoryPage;
@@ -12,46 +16,37 @@ public class ChangeCanvas : MonoBehaviour
     // เรียกใช้เมธอดนี้เมื่อกดปุ่ม backtoward
     public void ToHome()
     {
-        HomePage.SetActive(true);
-        HistoryPage.SetActive(false);
-        CustomModePage.SetActive(false);
-        GamePage.SetActive(false);
-        AccountSettingPage.SetActive(false);
+        StartCoroutine(SwitchCanvasAfterDelay(HomePage));
     }
 
     public void ToCustom()
     {
-        HomePage.SetActive(false);
-        HistoryPage.SetActive(false);
-        CustomModePage.SetActive(true);
-        GamePage.SetActive(false);
-        AccountSettingPage.SetActive(false);
+        StartCoroutine(SwitchCanvasAfterDelay(CustomModePage));
     }
 
     public void ToHistory()
     {
-        HomePage.SetActive(false);
-        HistoryPage.SetActive(true);
-        CustomModePage.SetActive(false);
-        GamePage.SetActive(false);
-        AccountSettingPage.SetActive(false);
+        StartCoroutine(SwitchCanvasAfterDelay(HistoryPage));
     }
 
     public void ToGame()
     {
-        HomePage.SetActive(false);
-        HistoryPage.SetActive(false);
-        CustomModePage.SetActive(false);
-        GamePage.SetActive(true);
-        AccountSettingPage.SetActive(false);
+        StartCoroutine(SwitchCanvasAfterDelay(GamePage));
     }
 
     public void ToAccountSetting()
     {
-        HomePage.SetActive(false);
-        HistoryPage.SetActive(false);
-        CustomModePage.SetActive(false);
-        GamePage.SetActive(false);
-        AccountSettingPage.SetActive(true);
+        StartCoroutine(SwitchCanvasAfterDelay(AccountSettingPage));
+    }
+
+    // Coroutine ช่วยหน่วงเวลาก่อนสลับหน้า
+    private IEnumerator SwitchCanvasAfterDelay(GameObject activePage)
+    {
+        yield return new WaitForSeconds(switchDelay);
+        HomePage.SetActive(activePage == HomePage);
+        HistoryPage.SetActive(activePage == HistoryPage);
+        CustomModePage.SetActive(activePage == CustomModePage);
+        GamePage.SetActive(activePage == GamePage);
+        AccountSettingPage.SetActive(activePage == AccountSettingPage);
     }
 }
