@@ -34,19 +34,9 @@ public class BackgroundMusic : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Functional Speech" ||
-                 scene.name == "Phoneme Practice" ||
-                 scene.name == "Facial Detection" ||
-                 scene.name == "Language Therapy")
-        {
-            if (audioSource.isPlaying)
-                audioSource.Stop();
-        }
-        else
-        {
-            if (!audioSource.isPlaying)
-                audioSource.Play();
-        }
+        // ตรวจสอบให้แน่ใจว่าเพลงกำลังเล่นอยู่ตลอดเวลา (loop = true)
+        if (!audioSource.isPlaying)
+            audioSource.Play();
     }
 
     void OnDestroy()

@@ -1405,6 +1405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!95 &226399475
 Animator:
   serializedVersion: 7
@@ -3755,6 +3756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!95 &501817738
 Animator:
   serializedVersion: 7
@@ -5921,7 +5923,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.067
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -7854,6 +7856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!95 &1122153168
 Animator:
   serializedVersion: 7
@@ -11080,6 +11083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!1 &1633030180
 GameObject:
   m_ObjectHideFlags: 0
@@ -11804,6 +11808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!1 &1684000420
 GameObject:
   m_ObjectHideFlags: 0
@@ -14619,6 +14624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneSwitchDelay: 0.1
 --- !u!95 &2071072071
 Animator:
   serializedVersion: 7

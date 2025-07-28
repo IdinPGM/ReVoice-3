@@ -282,11 +282,11 @@ public abstract class BaseSpeechGame : MonoBehaviour
         Debug.Log($"Next button clicked. Stage number updated to: {nextStage}");
         
         // Check if this is the last stage
-        if (nextStage >= 3)
+        if (nextStage >= stages.Length)
         {
             Debug.Log($"{GameName} completed!");
+            // Stop webcam and navigate to Home
             OnGameCompleted();
-            // Stop webcam and navigate to
             SceneManager.LoadScene("Home");
             return;
         }
@@ -309,8 +309,8 @@ public abstract class BaseSpeechGame : MonoBehaviour
         if (nextStage >= stages.Length)
         {
             Debug.Log($"{GameName} completed!");
-            OnGameCompleted();
             // Stop webcam and navigate to Home
+            OnGameCompleted();
             SceneManager.LoadScene("Home");
             return;
         }
@@ -322,12 +322,11 @@ public abstract class BaseSpeechGame : MonoBehaviour
     {
         PlaySFX(sfxGameComplete);
         // Stop webcam when game completes
-        if (webCam != null && webCam.isPlaying)
+        foreach (var raw in Object.FindObjectsByType<RawImage>(FindObjectsSortMode.None))
         {
-            webCam.Stop();
-            webcamImage.texture = null; // Clear webcam texture
+            if (raw.texture is WebCamTexture cam && cam.isPlaying)
+                cam.Stop();
         }
-        // Override for additional completion logic if needed
     }
 
     // Helper method สำหรับเล่น SFX
