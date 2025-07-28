@@ -4,7 +4,7 @@ using System.Collections;
 public class ChangeCanvas : MonoBehaviour
 {
     [Tooltip("Delay in seconds before switching canvas")]
-    public float switchDelay = 0.5f;
+    public float switchDelay = 0.2f;
 
     public GameObject Button;
     public GameObject HomePage;
