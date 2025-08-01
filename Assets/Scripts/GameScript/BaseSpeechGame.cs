@@ -13,6 +13,10 @@ public abstract class BaseSpeechGame : MonoBehaviour
     [SerializeField] protected TMP_Text targetText, descriptionText, feedbackText;
     [SerializeField] protected CameraSwitcher cameraSwitcher;
 
+    [Header("Button Images")]
+    [SerializeField] protected Sprite recordButtonSprite;
+    [SerializeField] protected Sprite stopButtonSprite;
+
     protected WebCamTexture webCam;
     protected AudioClip recordedClip;
 
@@ -156,8 +160,8 @@ public abstract class BaseSpeechGame : MonoBehaviour
         recordButton.onClick.RemoveListener(StartRecording);
         recordButton.onClick.AddListener(StopRecording);
 
-        // Update button text
-        UpdateRecordButtonText("หยุดบันทึก");
+        // Update button image and text
+        UpdateRecordButton(stopButtonSprite, "หยุดบันทึก");
     }
 
     public virtual void StopRecording()
@@ -168,8 +172,8 @@ public abstract class BaseSpeechGame : MonoBehaviour
         recordedClip = TrimClip(recordedClip, recordingLength);
         Debug.Log($"{GameName} recording stopped.");
 
-        // Update button text back to record
-        UpdateRecordButtonText("บันทึกเสียง");
+        // Update button image and text back to record
+        UpdateRecordButton(recordButtonSprite, "บันทึกเสียง");
 
         // Send to server
         SendAudioToServer();
@@ -177,6 +181,26 @@ public abstract class BaseSpeechGame : MonoBehaviour
         // Change button back to start recording
         recordButton.onClick.RemoveListener(StopRecording);
         recordButton.onClick.AddListener(StartRecording);
+    }
+
+    protected virtual void UpdateRecordButton(Sprite buttonSprite, string text)
+    {
+        // เปลี่ยนรูปภาพปุ่ม
+        if (buttonSprite != null)
+        {
+            var buttonImage = recordButton.GetComponent<Image>();
+            if (buttonImage != null)
+            {
+                buttonImage.sprite = buttonSprite;
+            }
+        }
+
+        // เปลี่ยนข้อความปุ่ม
+        var recordButtonText = recordButton.GetComponentInChildren<TMP_Text>();
+        if (recordButtonText != null)
+        {
+            recordButtonText.text = text;
+        }
     }
 
     protected virtual void UpdateRecordButtonText(string text)
