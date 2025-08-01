@@ -11,9 +11,11 @@ public class FacialDetection : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Button skipButton;
     [SerializeField] private TMP_Text targetText, descriptionText, feedbackText, detectedFaceText;
-    [SerializeField] private RawImage webcamImage, targetFaceImage, feedbackBox;
+    [SerializeField] private RawImage targetFaceImage, feedbackBox;
 
+    [Header("Webcam Settings")]
     private WebCamTexture webCam;
+    private CameraSwitcher cameraSwitcher;
 
     [Header("Sound Effects")]
     [SerializeField] protected AudioSource audioSource;
@@ -51,15 +53,19 @@ public class FacialDetection : MonoBehaviour
     private void Start()
     {
         PlaySFX(sfxGameStart);
-        // Initialize webcam with specific device
-        var camDevices = WebCamTexture.devices;
-        if (camDevices.Length > 0)
-            webCam = new WebCamTexture(camDevices[0].name);
-        else
-            webCam = new WebCamTexture();
-        webCam.Play();
-        webcamImage.texture = webCam;
-        webcamImage.raycastTarget = false;
+       // หา CameraSwitcher
+        cameraSwitcher = FindFirstObjectByType<CameraSwitcher>();
+        if (cameraSwitcher == null)
+        {
+            Debug.LogError("CameraSwitcher not found! Please make sure it exists in the scene.");
+            return;
+        }
+
+        // Subscribe to camera change events
+        CameraSwitcher.OnCameraChanged += OnCameraChanged;
+
+        // รอให้ CameraSwitcher เริ่มทำงานก่อน
+        StartCoroutine(WaitForCameraInitialization());
 
         // Load stage data from PlayerPrefs
         string json = PlayerPrefs.GetString("stageData", "");
@@ -76,8 +82,29 @@ public class FacialDetection : MonoBehaviour
         feedbackBox.gameObject.SetActive(false);
         feedbackBox.raycastTarget = false;
         targetFaceImage.raycastTarget = false;
+    }
 
+    private IEnumerator WaitForCameraInitialization()
+    {
+        // รอให้ CameraSwitcher เริ่มต้นกล้อง
+        yield return new WaitForSeconds(0.5f);
+        
+        // ใช้กล้องจาก CameraSwitcher
+        webCam = cameraSwitcher.GetCurrentCamera();
+        if (webCam != null)
+        {
+            // ใช้ RawImage เดียวกัน (ไม่ต้องสร้าง texture ใหม่)
+            Debug.Log("Using camera from CameraSwitcher: " + webCam.deviceName);
+        }
+        
         LoadCurrentStage();
+    }
+
+    private void OnCameraChanged(WebCamTexture newCamera)
+    {
+        // อัพเดทกล้องเมื่อ CameraSwitcher สลับกล้อง
+        webCam = newCamera;
+        Debug.Log("Camera switched to: " + (newCamera != null ? newCamera.deviceName : "null"));
     }
 
     private void LoadCurrentStage()
@@ -160,7 +187,12 @@ public class FacialDetection : MonoBehaviour
 
     private void CaptureAndSendFrame()
     {
-        if (webCam == null || !webCam.isPlaying) return;
+        // ตรวจสอบว่ามีกล้องและทำงานอยู่หรือไม่
+        if (webCam == null || !webCam.isPlaying)
+        {
+            Debug.LogWarning("WebCam is not available or not playing");
+            return;
+        }
 
         // Reuse Texture2D to avoid allocations
         if (snapshotTexture == null || snapshotTexture.width != webCam.width || snapshotTexture.height != webCam.height)
@@ -288,11 +320,11 @@ public class FacialDetection : MonoBehaviour
 
     private void OnDestroy()
     {
+        // Unsubscribe from events
+        CameraSwitcher.OnCameraChanged -= OnCameraChanged;
+
         StopFacialDetection();
-        if (webCam != null && webCam.isPlaying)
-        {
-            webCam.Stop();
-        }
+        
         if (snapshotTexture != null)
         {
             Destroy(snapshotTexture);
@@ -303,12 +335,31 @@ public class FacialDetection : MonoBehaviour
     protected virtual void OnGameCompleted()
     {
         PlaySFX(sfxGameComplete);
-        // Stop webcam when game completes
-        foreach (var raw in Object.FindObjectsByType<RawImage>(FindObjectsSortMode.None))
+        // หยุดการทำงานของกล้องทั้งหมด
+        StopAllCameras();
+    }
+
+    private void StopAllCameras()
+    {
+        // หยุดกล้องจาก CameraSwitcher
+        if (cameraSwitcher != null)
         {
-            if (raw.texture is WebCamTexture cam && cam.isPlaying)
-                cam.Stop();
+            cameraSwitcher.StopCamera();
         }
+
+        // หยุดกล้องอื่น ๆ ที่อาจยังทำงานอยู่
+        foreach (var rawImage in Object.FindObjectsByType<RawImage>(FindObjectsSortMode.None))
+        {
+            if (rawImage.texture is WebCamTexture cam && cam.isPlaying)
+            {
+                cam.Stop();
+                Debug.Log($"Stopped camera: {cam.deviceName}");
+            }
+        }
+
+        // เคลียร์ reference
+        webCam = null;
+        Debug.Log("All cameras stopped.");
     }
     
     protected void PlaySFX(AudioClip clip)

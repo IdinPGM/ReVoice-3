@@ -8,10 +8,10 @@ using UnityEngine.SceneManagement;
 public abstract class BaseSpeechGame : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] protected RawImage webcamImage;
     [SerializeField] protected RawImage feedbackBox;
     [SerializeField] protected Button recordButton, nextButton, skipButton, voiceButton;
     [SerializeField] protected TMP_Text targetText, descriptionText, feedbackText;
+    [SerializeField] protected CameraSwitcher cameraSwitcher;
 
     protected WebCamTexture webCam;
     protected AudioClip recordedClip;
@@ -57,7 +57,6 @@ public abstract class BaseSpeechGame : MonoBehaviour
     protected virtual void Start()
     {
         PlaySFX(sfxGameStart);
-        InitializeWebcam();
         LoadStageData();
         SetupUI();
         LoadCurrentStage();
@@ -65,9 +64,11 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     protected virtual void InitializeWebcam()
     {
-        webCam = new WebCamTexture();
-        if (!webCam.isPlaying) webCam.Play();
-        webcamImage.texture = webCam;
+        // ไม่ต้องสร้าง WebCamTexture ที่นี่แล้ว จะใช้จาก CameraSwitcher
+        if (cameraSwitcher != null)
+        {
+            webCam = cameraSwitcher.GetCurrentCamera();
+        }
     }
 
     protected virtual void LoadStageData()
@@ -87,11 +88,23 @@ public abstract class BaseSpeechGame : MonoBehaviour
         skipButton.onClick.AddListener(OnSkipButtonClicked);
         voiceButton.onClick.AddListener(OnVoiceButtonClicked);
 
+        // เชื่อมต่อกับ CameraSwitcher
+        if (cameraSwitcher != null)
+        {
+            CameraSwitcher.OnCameraChanged += OnCameraChanged;
+            webCam = cameraSwitcher.GetCurrentCamera();
+        }
+
         // Initial UI state
         nextButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
         feedbackBox.gameObject.SetActive(false);
+    }
+
+    protected virtual void OnCameraChanged(WebCamTexture newCam)
+    {
+        webCam = newCam;
     }
 
     protected virtual void LoadCurrentStage()
@@ -321,12 +334,40 @@ public abstract class BaseSpeechGame : MonoBehaviour
     protected virtual void OnGameCompleted()
     {
         PlaySFX(sfxGameComplete);
-        // Stop webcam when game completes
-        foreach (var raw in Object.FindObjectsByType<RawImage>(FindObjectsSortMode.None))
+        // หยุดกล้องจาก CameraSwitcher
+        StopAllCameras();
+    }
+
+    private void StopAllCameras()
+    {
+        // หยุดกล้องจาก CameraSwitcher
+        if (cameraSwitcher != null)
         {
-            if (raw.texture is WebCamTexture cam && cam.isPlaying)
-                cam.Stop();
+            cameraSwitcher.StopCamera();
         }
+
+        // หยุดกล้องอื่น ๆ ที่อาจยังทำงานอยู่
+        foreach (var rawImage in Object.FindObjectsByType<RawImage>(FindObjectsSortMode.None))
+        {
+            if (rawImage.texture is WebCamTexture cam && cam.isPlaying)
+            {
+                cam.Stop();
+                Debug.Log($"Stopped camera: {cam.deviceName}");
+            }
+        }
+
+        // เคลียร์ reference
+        webCam = null;
+        Debug.Log("All cameras stopped in BaseSpeechGame.");
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // ยกเลิกการติดตาม event
+        CameraSwitcher.OnCameraChanged -= OnCameraChanged;
+        
+        // หยุดกล้องเมื่อ GameObject ถูกทำลาย
+        StopAllCameras();
     }
 
     // Helper method สำหรับเล่น SFX

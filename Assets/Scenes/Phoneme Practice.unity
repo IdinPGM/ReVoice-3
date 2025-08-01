@@ -1044,7 +1044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770b3f5bd75e3a84099028ee0bba9cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  webcamImage: {fileID: 1827377344}
   feedbackBox: {fileID: 373897315}
   recordButton: {fileID: 507602661}
   nextButton: {fileID: 229855541}
@@ -1053,16 +1052,17 @@ MonoBehaviour:
   targetText: {fileID: 1381855933}
   descriptionText: {fileID: 702810093}
   feedbackText: {fileID: 637819578}
+  cameraSwitcher: {fileID: 263130728}
   audioSource: {fileID: 1516490164}
-  sfxGameStart: {fileID: 8300000, guid: d296adf47dd0a514fbd36b5ff7df9f9c, type: 3}
+  sfxGameStart: {fileID: 8300000, guid: 8dabc2759cd159041bfb85ff1c5b9be7, type: 3}
   sfxStartRecording: {fileID: 8300000, guid: 43c2e24f347561d4cb2a399e5468283f, type: 3}
-  sfxStopRecording: {fileID: 8300000, guid: 156d7be9d63eef644933d64e63ed8216, type: 3}
+  sfxStopRecording: {fileID: 8300000, guid: 1aa87e22c2424d3408a8d3195f2cb3da, type: 3}
   sfxCorrectAnswer: {fileID: 8300000, guid: 1be2fcc16ab0da84f99ba7c633037620, type: 3}
   sfxWrongAnswer: {fileID: 8300000, guid: 16d0788660e724f44ae05e641af1b222, type: 3}
   sfxShowSkip: {fileID: 8300000, guid: 568470e29bef88c4aaa027db357be957, type: 3}
   sfxNext: {fileID: 8300000, guid: 2a71d8e8ea428e0409d3df636b9f0192, type: 3}
-  sfxSkip: {fileID: 8300000, guid: bf0938dc5667ff34aa2616789bb48a17, type: 3}
-  sfxGameComplete: {fileID: 8300000, guid: 668620113e9d6dc4483ba3d8dbae9fcf, type: 3}
+  sfxSkip: {fileID: 0}
+  sfxGameComplete: {fileID: 0}
 --- !u!1 &637819576
 GameObject:
   m_ObjectHideFlags: 0

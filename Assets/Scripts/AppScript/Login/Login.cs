@@ -46,19 +46,6 @@ public class Login : MonoBehaviour
             password = password
         };
 
-        // StartCoroutine(LoginCoroutine(loginData,
-        //     onSuccess: (response) => {
-        //         PlayerPrefs.SetString("authToken", response.token);
-        //         PlayerPrefs.Save();
-        //         Debug.Log("Login successful, token saved.");
-        //         SceneManager.LoadScene("Home");
-        //     },
-        //     onError: (error, code) => {
-        //         Debug.LogError($"Login failed: {error} (Code: {code})");
-        //         ShowError($"Login failed: {error}");
-        //     }
-        // ));
-
         StartCoroutine(HttpHelper.PostRequestCoroutine<LoginRequest, LoginResponse>(
             "https://api.mystrokeapi.uk/auth/api/sign-in/email",
             loginData,
@@ -74,51 +61,6 @@ public class Login : MonoBehaviour
             }
         ));
     }
-
-    // private IEnumerator LoginCoroutine(LoginRequest loginData,
-    //     Action<LoginResponse> onSuccess,
-    //     Action<string, long> onError
-    // ) 
-    // {
-    //     string endpoint = "https://api.mystrokeapi.uk/auth/api/sign-in/email";
-
-    //     string jsonData = JsonUtility.ToJson(loginData);
-
-    //     byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-
-    //     using (UnityWebRequest request = new UnityWebRequest(endpoint, "POST"))
-    //     {
-    //         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-    //         request.downloadHandler = new DownloadHandlerBuffer();
-    //         request.SetRequestHeader("Content-Type", "application/json");
-
-    //         yield return request.SendWebRequest();
-
-    //         if (request.result == UnityWebRequest.Result.Success)
-    //         {
-    //             Debug.Log($"Request Success: {request.downloadHandler.text}");
-
-    //             try
-    //             {   
-    //                 // Change here!!
-    //                 LoginResponse response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
-    //                 Debug.Log($"Login Success: {response.token}");
-    //                 onSuccess?.Invoke(response);
-    //             }
-    //             catch (Exception ex)
-    //             {
-    //                 Debug.LogError($"JSON Parsing Error: {ex.Message}");
-    //                 onError?.Invoke($"Failed to parse login response.: {ex.Message}", request.responseCode);
-    //             }
-    //         }
-    //         else
-    //         {
-    //             string errorMessage = request.error;
-    //             Debug.LogError($"Request Error: {errorMessage}");
-    //             onError?.Invoke(errorMessage, request.responseCode);
-    //         }
-    //     }
-    // }
 
     private void ShowError(string message)
     {
