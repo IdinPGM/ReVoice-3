@@ -3651,6 +3651,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1646466024}
+  - component: {fileID: 1646466025}
   m_Layer: 0
   m_Name: Yes/No Questions
   m_TagString: Untagged
@@ -3684,6 +3685,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1646466025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646466023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e140f21c0ee44154c8693cc10e91d7d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordButton: {fileID: 0}
+  nextButton: {fileID: 0}
+  skipButton: {fileID: 0}
+  voiceButton: {fileID: 0}
+  questionText: {fileID: 0}
+  descriptionText: {fileID: 0}
+  feedbackText: {fileID: 0}
+  webcamImage: {fileID: 0}
+  feedbackBox: {fileID: 0}
+  choicesContainer: {fileID: 0}
+  choiceButtonPrefab: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!1 &1682425172
 GameObject:
   m_ObjectHideFlags: 0

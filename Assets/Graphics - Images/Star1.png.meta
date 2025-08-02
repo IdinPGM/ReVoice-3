@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: bdf6527ae3e299147b4259b186b5ea17
+guid: 7a3f4c9411723014aa14e6d485ffeee8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2289120341876417358
-    second: Stop Recording_0
+      213: 8442483440489259830
+    second: Star1_0
+  - first:
+      213: 3034218197488880005
+    second: Star1_1
+  - first:
+      213: 3280784649386260473
+    second: Star1_2
+  - first:
+      213: -1875227028161381373
+    second: Star1_3
+  - first:
+      213: 605204007748289005
+    second: Star1_4
+  - first:
+      213: 1883116678383649763
+    second: Star1_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +128,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stop Recording_0
+      name: Star1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 778
-        height: 129
+        x: 18
+        y: 38
+        width: 163
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +143,118 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e432aa992d694cf10800000000000000
-      internalID: 2289120341876417358
+      spriteID: 633ea7c75f9b92570800000000000000
+      internalID: 8442483440489259830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Star1_1
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 152
+        width: 37
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 589c958ef55bb1a20800000000000000
+      internalID: 3034218197488880005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Star1_2
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 152
+        width: 37
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f7f83b9140b78d20800000000000000
+      internalID: 3280784649386260473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Star1_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 49
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30cba3904fad9f5e0800000000000000
+      internalID: -1875227028161381373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Star1_4
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 67
+        width: 49
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de1ca7aa6dd166800800000000000000
+      internalID: 605204007748289005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Star1_5
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 4
+        width: 25
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e3cbad44ac222a10800000000000000
+      internalID: 1883116678383649763
       vertices: []
       indices: 
       edges: []
@@ -148,7 +273,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stop Recording_0: 2289120341876417358
+      Star1_0: 8442483440489259830
+      Star1_1: 3034218197488880005
+      Star1_2: 3280784649386260473
+      Star1_3: -1875227028161381373
+      Star1_4: 605204007748289005
+      Star1_5: 1883116678383649763
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

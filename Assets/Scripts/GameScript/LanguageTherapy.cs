@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Networking;
 
 public class LanguageTherapy : MonoBehaviour
 {
@@ -109,6 +110,9 @@ public class LanguageTherapy : MonoBehaviour
 
         // Create choice buttons
         CreateChoiceButtons();
+
+        // เล่นเสียง questionText โดยอัตโนมัติเมื่อโหลด stage
+        StartCoroutine(PlayQuestionTextWithDelay(1f));
 
         // Show skip button after 10 seconds
         Invoke("ShowSkip", 10f);
@@ -291,17 +295,81 @@ public class LanguageTherapy : MonoBehaviour
 
     private void OnVoiceButtonClicked()
     {
-        // Play question audio
-        Debug.Log("Playing question audio");
+        // ใช้ TTS เพื่อเล่นเสียงคำถาม (questionText)
+        Debug.Log("Playing question using TTS");
         
-        // If you have an audio source for question audio
-        if (audioSource != null && audioSource.clip != null)
+        if (questionText != null && !string.IsNullOrEmpty(questionText.text))
         {
-            audioSource.Play();
+            StartCoroutine(SpeakText(questionText.text));
         }
+        else
+        {
+            Debug.LogWarning("Question text is empty or null");
+            
+            // Fallback: เล่นเสียงจาก AudioSource หากมี
+            if (audioSource != null && audioSource.clip != null)
+            {
+                audioSource.Play();
+            }
+        }
+    }
+
+    // Coroutine สำหรับ Text-to-Speech
+    private IEnumerator SpeakText(string text)
+    {
+        Debug.Log($"TTS: Speaking text - {text}");
         
-        // Or you could load audio from server/resources based on current stage
-        // StartCoroutine(LoadAndPlayQuestionAudio(stages[currentStageIndex].audioUrl));
+        // URL encode ข้อความ
+        string encodedText = UnityEngine.Networking.UnityWebRequest.EscapeURL(text);
+        
+        // ใช้ Google Translate TTS API
+        string url = $"https://translate.google.com/translate_tts?ie=UTF-8&q={encodedText}&tl=th&client=tw-ob";
+        
+        using (UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
+        {
+            // เพิ่ม headers เพื่อหลีกเลี่ยงการถูกบล็อก
+            www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+            {
+                AudioClip clip = UnityEngine.Networking.DownloadHandlerAudioClip.GetContent(www);
+                if (clip != null && audioSource != null)
+                {
+                    // หยุดเสียงปัจจุบันก่อน
+                    if (audioSource.isPlaying)
+                        audioSource.Stop();
+                        
+                    audioSource.clip = clip;
+                    audioSource.Play();
+                    Debug.Log($"TTS: Successfully played text - {text}");
+                }
+                else
+                {
+                    Debug.LogError("TTS: Failed to create audio clip");
+                }
+            }
+            else
+            {
+                Debug.LogError($"TTS: Failed to get audio: {www.error}");
+                
+                // Fallback: แสดงข้อความในคอนโซลแทน
+                Debug.Log($"TTS Fallback: {text}");
+            }
+        }
+    }
+
+    // Coroutine สำหรับเล่นเสียง questionText หลังจากหน่วงเวลา
+    private IEnumerator PlayQuestionTextWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (questionText != null && !string.IsNullOrEmpty(questionText.text))
+        {
+            Debug.Log($"Auto-playing question text: {questionText.text}");
+            yield return StartCoroutine(SpeakText(questionText.text));
+        }
     }
 
     private void OnNextButtonClicked()

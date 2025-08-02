@@ -280,7 +280,7 @@ public class FacialDetection : MonoBehaviour
         {
             Debug.Log("Game completed!");
             OnGameCompleted();
-            SceneManager.LoadScene("Home");
+            SceneManager.LoadScene("GameComplete");
             return;
         }
 

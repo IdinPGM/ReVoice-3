@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public abstract class BaseSpeechGame : MonoBehaviour
 {
@@ -126,6 +127,9 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
         // Reset UI state
         ResetUIState();
+
+        // เล่นเสียง targetText โดยอัตโนมัติเมื่อโหลด stage
+        StartCoroutine(PlayTargetTextWithDelay(1f));
 
         // Show skip button after 10 seconds
         Invoke("ShowSkip", 10f);
@@ -290,11 +294,80 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     protected virtual void OnVoiceButtonClicked()
     {
-        Debug.Log($"Playing {GameName} example audio");
+        Debug.Log($"Playing {GameName} target text using TTS");
         
-        if (audioSource != null && audioSource.clip != null)
+        // ใช้ TTS เพื่อเล่นเสียง targetText
+        if (targetText != null && !string.IsNullOrEmpty(targetText.text))
         {
-            audioSource.Play();
+            StartCoroutine(SpeakText(targetText.text));
+        }
+        else
+        {
+            Debug.LogWarning("Target text is empty or null");
+            
+            // Fallback: เล่นเสียงจาก AudioSource หากมี
+            if (audioSource != null && audioSource.clip != null)
+            {
+                audioSource.Play();
+            }
+        }
+    }
+
+    // Coroutine สำหรับ Text-to-Speech
+    protected virtual IEnumerator SpeakText(string text)
+    {
+        Debug.Log($"TTS: Speaking text - {text}");
+        
+        // URL encode ข้อความ
+        string encodedText = UnityEngine.Networking.UnityWebRequest.EscapeURL(text);
+        
+        // ใช้ Google Translate TTS API
+        string url = $"https://translate.google.com/translate_tts?ie=UTF-8&q={encodedText}&tl=th&client=tw-ob";
+        
+        using (UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
+        {
+            // เพิ่ม headers เพื่อหลีกเลี่ยงการถูกบล็อก
+            www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+            {
+                AudioClip clip = UnityEngine.Networking.DownloadHandlerAudioClip.GetContent(www);
+                if (clip != null && audioSource != null)
+                {
+                    // หยุดเสียงปัจจุบันก่อน
+                    if (audioSource.isPlaying)
+                        audioSource.Stop();
+                        
+                    audioSource.clip = clip;
+                    audioSource.Play();
+                    Debug.Log($"TTS: Successfully played text - {text}");
+                }
+                else
+                {
+                    Debug.LogError("TTS: Failed to create audio clip");
+                }
+            }
+            else
+            {
+                Debug.LogError($"TTS: Failed to get audio: {www.error}");
+                
+                // Fallback: แสดงข้อความในคอนโซลแทน
+                Debug.Log($"TTS Fallback: {text}");
+            }
+        }
+    }
+
+    // Coroutine สำหรับเล่นเสียง targetText หลังจากหน่วงเวลา
+    protected virtual IEnumerator PlayTargetTextWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (targetText != null && !string.IsNullOrEmpty(targetText.text))
+        {
+            Debug.Log($"Auto-playing target text for {GameName}: {targetText.text}");
+            yield return StartCoroutine(SpeakText(targetText.text));
         }
     }
 
@@ -322,9 +395,9 @@ public abstract class BaseSpeechGame : MonoBehaviour
         if (nextStage >= stages.Length)
         {
             Debug.Log($"{GameName} completed!");
-            // Stop webcam and navigate to Home
+            // Stop webcam and navigate to GameComplete
             OnGameCompleted();
-            SceneManager.LoadScene("Home");
+            SceneManager.LoadScene("GameComplete");
             return;
         }
         

@@ -68,30 +68,40 @@ public class CameraSwitcher : MonoBehaviour
         // Debug information
         Debug.Log($"Camera: {devices[currentCameraIndex].name}");
         Debug.Log($"IsFront: {isFront}, VerticallyMirrored: {verticallyMirrored}, Rotation: {rotation}");
+        Debug.Log($"Platform: {Application.platform}");
+
+        // ตรวจสอบแพลตฟอร์ม
+        bool isAndroid = Application.platform == RuntimePlatform.Android;
 
         if (isFront)
         {
-            // กล้องหน้า - ลองหลายวิธีการแก้ไข
-            
-            // วิธีที่ 1: หมุน + mirror แนวตั้ง (สำหรับกล้องที่หัวกลับ)
-            if (verticallyMirrored)
+            if (isAndroid)
             {
-                display.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation);
-                display.uvRect = new Rect(1, 1, -1, -1); // mirror ทั้งสองแกน
+                if (verticallyMirrored)
+                {
+                    // หมุน + mirror แนวตั้ง
+                    display.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation);
+                    display.uvRect = new Rect(1, 1, -1, -1); // mirror ทั้งสองแกน
+                }
+                else
+                {
+                    // หมุนเพิ่ม 180 องศา + mirror แนวนอน
+                    display.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation + 180);
+                    display.uvRect = new Rect(1, 0, -1, 1); // mirror แนวนอนอย่างเดียว
+                }
             }
-            // วิธีที่ 2: หมุนเพิ่ม 180 องศา + mirror แนวนอน
             else
             {
-                // display.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation + 180);
-                // display.uvRect = new Rect(1, 0, -1, 1); // mirror แนวนอนอย่างเดียว
+                // PC/Editor: ใช้ mirror แนวนอนเท่านั้น
+                display.uvRect = new Rect(1, 0, -1, 1);
             }
         }
         else
         {
             // กล้องหลัง - ใช้การตั้งค่าปกติ
             display.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation);
-            
-            if (verticallyMirrored)
+
+            if (isAndroid && verticallyMirrored)
             {
                 display.uvRect = new Rect(0, 1, 1, -1); // mirror แนวตั้ง
             }
