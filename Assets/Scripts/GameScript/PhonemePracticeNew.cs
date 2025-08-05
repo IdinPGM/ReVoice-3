@@ -6,7 +6,7 @@ using TMPro;
 public class PhonemePracticeNew : BaseSpeechGame
 {
     // Override abstract properties
-    protected override float ThresholdValue => 0.6f; // Slightly more lenient for phoneme practice
+    protected override float ThresholdValue => 0.5f;
     protected override string GameName => "phoneme_practice";
     protected override string CorrectMessage => "สุดยอดเลย! ออกเสียงดีมาก";
     protected override string RetryMessagePrefix => "ลองอีกทีนึงนะ: ";
