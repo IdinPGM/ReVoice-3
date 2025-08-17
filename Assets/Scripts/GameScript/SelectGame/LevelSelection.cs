@@ -77,7 +77,7 @@ public class LevelSelection : MonoBehaviour
             return; // Exit early to avoid further processing
         }
 
-        difficulty = PlayerPrefs.GetFloat("difficultyId", 0.5f);
+        difficulty = PlayerPrefs.GetFloat("difficulty", 0.6f);
         Debug.Log($"Loaded Game ID: {gameType}, Difficulty ID: {difficulty}");
 
         // Load levels from the server

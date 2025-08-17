@@ -44,6 +44,18 @@ public class FacialDetection : MonoBehaviour
         public Stage[] stages;
     }
 
+    [System.Serializable]
+    public class EndSessionRequest
+    {
+        public string sessionId;
+    }
+
+    [System.Serializable]
+    public class EndSessionResponse
+    {
+        public string message;
+    }
+
     private Stage[] stages;
     private int currentStageIndex = 0;
     private bool isDetecting = false;
@@ -332,9 +344,52 @@ public class FacialDetection : MonoBehaviour
         }
     }
 
+    protected virtual void EndGameSession()
+    {
+        string sessionId = PlayerPrefs.GetString("sessionId", string.Empty);
+        string authToken = PlayerPrefs.GetString("authToken", string.Empty);
+        
+        if (string.IsNullOrEmpty(sessionId))
+        {
+            Debug.LogWarning("EndGameSession: No session ID found");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(authToken))
+        {
+            Debug.LogWarning("EndGameSession: No auth token found");
+            return;
+        }
+
+        EndSessionRequest requestData = new EndSessionRequest
+        {
+            sessionId = sessionId
+        };
+
+        var headers = new Dictionary<string, string>
+        {
+            {"Authorization", "Bearer " + authToken }
+        };
+
+        StartCoroutine(HttpHelper.PostRequestCoroutine<EndSessionRequest, EndSessionResponse>(
+            "https://api.mystrokeapi.uk/game/session/end",
+            requestData,
+            onSuccess: (response) => {
+                Debug.Log($"Game session ended successfully: {response.message}");
+            },
+            onError: (error, code) => {
+                Debug.LogError($"Failed to end game session: {error}, Code: {code}");
+            },
+            additionalHeaders: headers
+        ));
+    }
+
     protected virtual void OnGameCompleted()
     {
         PlaySFX(sfxGameComplete);
+
+        EndGameSession();
+        Debug.Log($"{gameObject.name} game completed. Stopping all cameras.");
         // หยุดการทำงานของกล้องทั้งหมด
         StopAllCameras();
     }
@@ -366,5 +421,26 @@ public class FacialDetection : MonoBehaviour
     {
         if (audioSource != null && clip != null)
             audioSource.PlayOneShot(clip);
+    }
+    
+    // Method สำหรับเริ่มเกม custom
+    public void StartCustomGame(object customGameData)
+    {
+        Debug.Log($"Starting Facial Detection custom game");
+        
+        // Store custom game information from PlayerPrefs (set by CustomGameItem)
+        string customGameId = PlayerPrefs.GetString("CustomGameId", "");
+        string customGameName = PlayerPrefs.GetString("CustomGameName", "");
+        string customGameType = PlayerPrefs.GetString("CustomGameType", "");
+        string customGameSubtype = PlayerPrefs.GetString("CustomGameSubtype", "");
+        
+        Debug.Log($"Custom Game Info - ID: {customGameId}, Name: {customGameName}, Type: {customGameType}, Subtype: {customGameSubtype}");
+        
+        // เริ่มเกมโดยใช้การทำงานเหมือน Start() method
+        // แต่สามารถปรับแต่งได้ตามข้อมูล custom game
+        PlaySFX(sfxGameStart);
+        
+        // รอให้ระบบเริ่มต้นเสร็จก่อน
+        StartCoroutine(WaitForCameraInitialization());
     }
 }

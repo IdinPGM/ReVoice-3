@@ -2155,8 +2155,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0E21\u0E34\u0E19\u0E34\u0E40\u0E01\u0E21\u0E40\u0E09\u0E1E\u0E32\u0E30
-    - A"
+  m_text: "\u0E17\u0E14\u0E2A\u0E2D\u0E1A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d3d7cdc719e05de41970ed758ed49b1b, type: 2}
   m_sharedMaterial: {fileID: 3974177412736563825, guid: d3d7cdc719e05de41970ed758ed49b1b, type: 2}
@@ -2700,7 +2699,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Language Therapy
+  m_text: Fuctional Speech
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5885,8 +5884,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0E21\u0E34\u0E19\u0E34\u0E40\u0E01\u0E21\u0E40\u0E09\u0E1E\u0E32\u0E30
-    - B"
+  m_text: "\u0E1E\u0E39\u0E14\u0E0A\u0E37\u0E48\u0E2D\u0E04\u0E23\u0E2D\u0E1A\u0E04\u0E23\u0E31\u0E27"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d3d7cdc719e05de41970ed758ed49b1b, type: 2}
   m_sharedMaterial: {fileID: 3974177412736563825, guid: d3d7cdc719e05de41970ed758ed49b1b, type: 2}
@@ -6166,7 +6164,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 21/4/2025
+  m_text: 16/08/2025
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7850,7 +7848,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 18/4/2025
+  m_text: 16/08/2025
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9983,7 +9981,7 @@ GameObject:
   - component: {fileID: 1429703470}
   - component: {fileID: 1429703469}
   m_Layer: 5
-  m_Name: Heading
+  m_Name: Category
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10595,7 +10593,7 @@ GameObject:
   - component: {fileID: 1538709668}
   - component: {fileID: 1538709667}
   m_Layer: 5
-  m_Name: Heading (1)
+  m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13240,7 +13238,7 @@ GameObject:
   - component: {fileID: 1755648814}
   - component: {fileID: 1755648813}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15429,7 +15427,6 @@ GameObject:
   - component: {fileID: 2071072069}
   - component: {fileID: 2071072068}
   - component: {fileID: 2071072067}
-  - component: {fileID: 2071072070}
   - component: {fileID: 2071072071}
   - component: {fileID: 2071072072}
   m_Layer: 5
@@ -15501,19 +15498,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2071072068}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2071072070}
-        m_TargetAssemblyTypeName: SwitchScene, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Language Therapy
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2071072068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15552,19 +15537,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071072065}
   m_CullTransparentMesh: 1
---- !u!114 &2071072070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2071072065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71486fe95fffab2469be2048e11a0182, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneSwitchDelay: 0.1
 --- !u!95 &2071072071
 Animator:
   serializedVersion: 7
@@ -15790,6 +15762,7 @@ MonoBehaviour:
   facialDetectionButton: {fileID: 35035333}
   functionalSpeechButton: {fileID: 516098054}
   phonemePracticeButton: {fileID: 1564086718}
+  languageTherapyButton: {fileID: 2071072067}
 --- !u!1 &2122842494
 GameObject:
   m_ObjectHideFlags: 0
@@ -16063,7 +16036,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Facial Detection
+  m_text: Fuctional Speech
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

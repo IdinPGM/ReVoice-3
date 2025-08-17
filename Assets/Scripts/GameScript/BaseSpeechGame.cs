@@ -9,10 +9,11 @@ using UnityEngine.Networking;
 public abstract class BaseSpeechGame : MonoBehaviour
 {
     [Header("UI Elements")]
+    [SerializeField] protected CameraSwitcher cameraSwitcher;
     [SerializeField] protected RawImage feedbackBox;
     [SerializeField] protected Button recordButton, nextButton, skipButton, voiceButton;
     [SerializeField] protected TMP_Text targetText, descriptionText, feedbackText;
-    [SerializeField] protected CameraSwitcher cameraSwitcher;
+    [SerializeField] protected RawImage pictureDisplay; // เพิ่ม pictureDisplay สำหรับ Language Therapy
 
     [Header("Button Images")]
     [SerializeField] protected Sprite recordButtonSprite;
@@ -50,8 +51,21 @@ public abstract class BaseSpeechGame : MonoBehaviour
         public Stage[] stages;
     }
 
+    [System.Serializable]
+    public class EndSessionRequest
+    {
+        public string sessionId;
+    }
+
+    [System.Serializable]
+    public class EndSessionResponse
+    {
+        public string message;
+    }
+
     protected Stage[] stages;
     protected int currentStageIndex = 0;
+    protected Texture2D currentPicture; // เพิ่มสำหรับเก็บรูปภาพปัจจุบัน
 
     // Abstract properties that child classes must implement
     protected abstract float ThresholdValue { get; }
@@ -91,7 +105,10 @@ public abstract class BaseSpeechGame : MonoBehaviour
         recordButton.onClick.AddListener(StartRecording);
         nextButton.onClick.AddListener(OnNextButtonClicked);
         skipButton.onClick.AddListener(OnSkipButtonClicked);
-        voiceButton.onClick.AddListener(OnVoiceButtonClicked);
+        if (voiceButton != null)
+        {
+            voiceButton.onClick.AddListener(OnVoiceButtonClicked);
+        }
 
         // เชื่อมต่อกับ CameraSwitcher
         if (cameraSwitcher != null)
@@ -122,8 +139,13 @@ public abstract class BaseSpeechGame : MonoBehaviour
         if (currentStageIndex < 0) currentStageIndex = 0;
 
         // Update UI
-        targetText.text = stages[currentStageIndex].target;
-        descriptionText.text = stages[currentStageIndex].description;
+        if (targetText != null)
+            targetText.text = stages[currentStageIndex].target;
+        if (descriptionText != null)
+            descriptionText.text = stages[currentStageIndex].description;
+
+        // Load picture for current stage (สำหรับ Language Therapy)
+        LoadCurrentPicture();
 
         // Reset UI state
         ResetUIState();
@@ -141,6 +163,72 @@ public abstract class BaseSpeechGame : MonoBehaviour
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
         feedbackBox.gameObject.SetActive(false);
+        
+        // Reset picture display (สำหรับ Language Therapy)
+        if (pictureDisplay != null)
+        {
+            pictureDisplay.gameObject.SetActive(false);
+        }
+    }
+    
+    // Method สำหรับโหลดรูปภาพ (สำหรับ Language Therapy)
+    protected virtual void LoadCurrentPicture()
+    {
+        if (stages == null || stages.Length == 0 || currentStageIndex < 0 || currentStageIndex >= stages.Length)
+        {
+            Debug.LogWarning("Invalid stage data or index for picture loading");
+            return;
+        }
+
+        Stage currentStage = stages[currentStageIndex];
+        
+        // Load picture if image path is provided
+        if (!string.IsNullOrEmpty(currentStage.image))
+        {
+            StartCoroutine(LoadPictureFromURL(currentStage.image));
+        }
+        else
+        {
+            Debug.LogWarning($"No image path provided for stage {currentStage.number}");
+            // Hide picture display if no image
+            if (pictureDisplay != null)
+            {
+                pictureDisplay.gameObject.SetActive(false);
+            }
+        }
+    }
+    
+    // Coroutine สำหรับโหลดรูปภาพจาก URL
+    protected virtual IEnumerator LoadPictureFromURL(string imageUrl)
+    {
+        Debug.Log($"Loading picture from: {imageUrl}");
+
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                currentPicture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                
+                if (pictureDisplay != null)
+                {
+                    pictureDisplay.texture = currentPicture;
+                    pictureDisplay.gameObject.SetActive(true);
+                    Debug.Log("Picture loaded successfully");
+                }
+            }
+            else
+            {
+                Debug.LogError($"Failed to load picture: {www.error}");
+                
+                // Hide picture display on error
+                if (pictureDisplay != null)
+                {
+                    pictureDisplay.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     public virtual void StartRecording()
@@ -428,9 +516,52 @@ public abstract class BaseSpeechGame : MonoBehaviour
         LoadCurrentStage();
     }
 
+    protected virtual void EndGameSession()
+    {
+        string sessionId = PlayerPrefs.GetString("sessionId", string.Empty);
+        string authToken = PlayerPrefs.GetString("authToken", string.Empty);
+        
+        if (string.IsNullOrEmpty(sessionId))
+        {
+            Debug.LogWarning("EndGameSession: No session ID found");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(authToken))
+        {
+            Debug.LogWarning("EndGameSession: No auth token found");
+            return;
+        }
+
+        EndSessionRequest requestData = new EndSessionRequest
+        {
+            sessionId = sessionId
+        };
+
+        var headers = new Dictionary<string, string>
+        {
+            {"Authorization", "Bearer " + authToken }
+        };
+
+        StartCoroutine(HttpHelper.PostRequestCoroutine<EndSessionRequest, EndSessionResponse>(
+            "https://api.mystrokeapi.uk/game/session/end",
+            requestData,
+            onSuccess: (response) => {
+                Debug.Log($"Game session ended successfully: {response.message}");
+            },
+            onError: (error, code) => {
+                Debug.LogError($"Failed to end game session: {error}, Code: {code}");
+            },
+            additionalHeaders: headers
+        ));
+    }
+
     protected virtual void OnGameCompleted()
     {
         PlaySFX(sfxGameComplete);
+
+        EndGameSession();
+        Debug.Log($"{GameName} game completed. Stopping all cameras.");
         // หยุดกล้องจาก CameraSwitcher
         StopAllCameras();
     }
@@ -465,6 +596,13 @@ public abstract class BaseSpeechGame : MonoBehaviour
         
         // หยุดกล้องเมื่อ GameObject ถูกทำลาย
         StopAllCameras();
+        
+        // Clean up picture texture
+        if (currentPicture != null)
+        {
+            Destroy(currentPicture);
+            currentPicture = null;
+        }
     }
 
     // Helper method สำหรับเล่น SFX

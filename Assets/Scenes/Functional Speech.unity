@@ -1429,8 +1429,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 379.7, y: -271}
-  m_SizeDelta: {x: 598.551, y: 108.273}
+  m_AnchoredPosition: {x: 537.74, y: -271}
+  m_SizeDelta: {x: 927.65, y: 108.273}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1139643293
 MonoBehaviour:
@@ -1924,6 +1924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d02e91663d837646ad53c6b09a0a440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraSwitcher: {fileID: 841259419}
   feedbackBox: {fileID: 2138915955}
   recordButton: {fileID: 506241898}
   nextButton: {fileID: 735118825}
@@ -1932,7 +1933,7 @@ MonoBehaviour:
   targetText: {fileID: 362023824}
   descriptionText: {fileID: 1139643293}
   feedbackText: {fileID: 2126168634}
-  cameraSwitcher: {fileID: 841259419}
+  pictureDisplay: {fileID: 0}
   recordButtonSprite: {fileID: -1662530572831895502, guid: d9c5b73d9b59aa444b64e42f7cfe0b9e, type: 3}
   stopButtonSprite: {fileID: 2289120341876417358, guid: bdf6527ae3e299147b4259b186b5ea17, type: 3}
   audioSource: {fileID: 1107985544}

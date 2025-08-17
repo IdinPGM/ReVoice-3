@@ -9,9 +9,9 @@ public class DifficultySelection : MonoBehaviour
     [SerializeField] Button hardButton;
 
     private string gameType;
-    private const float EASY_DIFFICULTY = 0.3f;
-    private const float NORMAL_DIFFICULTY = 0.5f;
-    private const float HARD_DIFFICULTY = 0.7f;
+    private const float EASY_DIFFICULTY = 0.5f;
+    private const float NORMAL_DIFFICULTY = 0.7f;
+    private const float HARD_DIFFICULTY = 0.9f;
 
     private void Start()
     {

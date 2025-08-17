@@ -19,10 +19,10 @@ public class CustomMake : MonoBehaviour
 
         // ตั้งค่าสำหรับ functional speech
         PlayerPrefs.SetString("gameType", "functional_speech");
-        PlayerPrefs.SetFloat("difficulty", 0.5f); // Normal difficulty
+        PlayerPrefs.SetFloat("difficulty", 0.9f);
         
         // ใช้ Level ID ที่กำหนดไว้แล้ว
-        string levelId = "86683ff5-1389-446d-97b8-3da7ea352c26";
+        string levelId = "f117cf03-7323-43db-9979-d50265c25628";
         PlayerPrefs.SetString("levelId", levelId);
         PlayerPrefs.Save();
 
