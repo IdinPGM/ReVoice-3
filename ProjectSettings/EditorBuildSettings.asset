@@ -47,6 +47,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameComplete.unity
     guid: c5e703e839e0adf479c460be9b69496f
+  - enabled: 1
+    path: Assets/Scenes/Exchange Shop.unity
+    guid: b001c9db043543148ad1ff321352b122
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 768e24a99ce5a314d968014c546d9e98, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 801a185d4353e3f4fab3318b489a3905, type: 2}
