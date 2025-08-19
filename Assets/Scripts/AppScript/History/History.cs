@@ -17,7 +17,7 @@ public class History : MonoBehaviour
     
     [Header("Settings")]
     public int maxHistoryItems = 10; // จำนวนสูงสุดของ history items
-    public float itemSpacing = 10f; // ระยะห่างระหว่าง items
+    public float itemSpacing = 200f; // เพิ่มระยะห่างระหว่าง items (เปลี่ยนจาก 10f เป็น 20f)
     
     private List<HistoryData> historyDataList = new List<HistoryData>();
     private List<HistoryItem> historyItemsList = new List<HistoryItem>();
@@ -40,7 +40,11 @@ public class History : MonoBehaviour
         {
             VerticalLayoutGroup layoutGroup = historyContainer.GetComponent<VerticalLayoutGroup>();
             if (layoutGroup != null)
+            {
                 layoutGroup.spacing = itemSpacing;
+                layoutGroup.childControlHeight = false; // เพิ่มเพื่อไม่ให้ย่อขนาด
+                layoutGroup.childForceExpandHeight = false; // เพิ่มเพื่อไม่ให้ขยายเต็ม
+            }
         }
         
         ShowLoadingState(false);
@@ -67,14 +71,14 @@ public class History : MonoBehaviour
     
     private List<HistoryData> GetSampleHistoryData()
     {
-        // Sample data ตามรูปที่แนบมา
+        // Sample data ตามรูปแบบใหม่
         List<HistoryData> sampleData = new List<HistoryData>
         {
-            new HistoryData("Minigame - A", "20/04/25", "Great Job!", false, 5),
-            new HistoryData("Minigame - A", "20/04/25", "Great!", false, 4),
-            new HistoryData("Minigame - A", "20/04/25", "Excellent!", false, 5),
-            new HistoryData("Custom Game", "19/04/25", "Amazing!", true, 5),
-            new HistoryData("Minigame - B", "18/04/25", "Good work!", false, 3)
+            new HistoryData("Facial Detection", "Level 1", "20/04/25", "Great Job!", "Main Game", 5),
+            new HistoryData("Functional Speech", "Level 2", "20/04/25", "Great!", "Main Game", 4),
+            new HistoryData("Phoneme Practice", "Level 3", "20/04/25", "Excellent!", "Main Game", 5),
+            new HistoryData("Language Therapy", "Custom Level", "19/04/25", "Amazing!", "Custom Game", 5),
+            new HistoryData("Facial Detection", "Level 5", "18/04/25", "Good work!", "Main Game", 3)
         };
         
         return sampleData;
@@ -143,6 +147,9 @@ public class History : MonoBehaviour
         // Create new items
         CreateHistoryItems();
         
+        // Update spacing after creating items
+        UpdateItemSpacing();
+        
         // Scroll to top
         if (scrollRect != null)
             StartCoroutine(ScrollToTop());
@@ -190,7 +197,7 @@ public class History : MonoBehaviour
         if (loadingText != null)
         {
             loadingText.gameObject.SetActive(show);
-            loadingText.text = show ? "Loading..." : "";
+            loadingText.text = show ? "Loading History ..." : "";
         }
         
         if (refreshButton != null)
@@ -202,6 +209,29 @@ public class History : MonoBehaviour
         LoadHistoryFromServer();
     }
     
+    // Method เพื่อแก้ไขระยะห่างแบบทันที (เรียกใช้จาก Inspector หรือ script อื่น)
+    [ContextMenu("Update Item Spacing")]
+    public void UpdateItemSpacing()
+    {
+        if (historyContainer != null)
+        {
+            VerticalLayoutGroup layoutGroup = historyContainer.GetComponent<VerticalLayoutGroup>();
+            if (layoutGroup != null)
+            {
+                layoutGroup.spacing = itemSpacing;
+                // บังคับให้ layout group อัปเดตทันที
+                LayoutRebuilder.ForceRebuildLayoutImmediate(historyContainer.GetComponent<RectTransform>());
+            }
+        }
+    }
+    
+    // Method เพื่อทดสอบสร้าง history item (เรียกใช้จาก Inspector)
+    [ContextMenu("Test Create Sample Data")]
+    public void TestCreateSampleData()
+    {
+        LoadSampleData();
+    }
+    
     public void AddNewHistoryItem(HistoryData newData)
     {
         historyDataList.Insert(0, newData); // เพิ่มที่ด้านบน
@@ -211,6 +241,18 @@ public class History : MonoBehaviour
             historyDataList.RemoveAt(historyDataList.Count - 1);
         
         UpdateHistoryDisplay(historyDataList);
+    }
+    
+    // Helper method สำหรับเพิ่ม history item แบบง่าย
+    public void AddNewHistoryItem(string gameType, string levelName, int score, bool isCustom = false)
+    {
+        string gameCategory = HistoryData.GetGameCategoryFromType(gameType);
+        string date = DateTime.Now.ToString("dd/MM/yy");
+        string compliment = GetComplimentFromScore(score);
+        string type = isCustom ? "Custom Game" : "Main Game";
+        
+        HistoryData newData = new HistoryData(gameCategory, levelName, date, compliment, type, score);
+        AddNewHistoryItem(newData);
     }
     
     public int GetHistoryCount()
@@ -230,13 +272,14 @@ public class History : MonoBehaviour
         foreach (var item in apiItems)
         {
             // Convert API response to HistoryData format
-            string gameCategory = item.name ?? "Unknown Game";
+            string gameCategory = HistoryData.GetGameCategoryFromType(item.type);
+            string levelName = item.name ?? "Unknown Level";
             string date = FormatDate(item.completedAt);
             string complimentText = GetComplimentFromScore(item.score);
-            bool isCustom = item.isCustom;
+            string gameType = item.isCustom ? "Custom Game" : "Main Game";
             int starCount = Mathf.Clamp(item.score, 0, 5);
             
-            HistoryData historyData = new HistoryData(gameCategory, date, complimentText, isCustom, starCount);
+            HistoryData historyData = new HistoryData(gameCategory, levelName, date, complimentText, gameType, starCount);
             historyDataList.Add(historyData);
         }
         
@@ -261,15 +304,17 @@ public class History : MonoBehaviour
 
     private string GetComplimentFromScore(int score)
     {
-        switch (score)
-        {
-            case 5: return "Excellent!";
-            case 4: return "Great Job!";
-            case 3: return "Good work!";
-            case 2: return "Nice try!";
-            case 1: return "Keep trying!";
-            default: return "Good effort!";
-        }
+        string[] compliments = {
+            "Excellent!", "Outstanding!", "Superb!", "Fantastic!", "Brilliant!",
+            "Great Job!", "Well done!", "Impressive!", "Nice work!", "Very good!",
+            "Good work!", "Solid effort!", "Keep it up!", "Nice progress!", "Well played!",
+            "Nice try!", "Getting better!", "Keep practicing!", "Don't give up!", "Almost there!",
+            "Keep trying!", "You can do it!", "Stay motivated!", "Practice makes perfect!", "Keep going!",
+            "Good effort!", "Keep learning!", "Stay positive!", "Try again!", "Keep improving!"
+        };
+
+        System.Random rand = new System.Random();
+        return compliments[rand.Next(compliments.Length)];
     }
 }
 
@@ -285,12 +330,12 @@ public class ApiHistoryResponse
 public class ApiHistoryItem
 {
     public string id;
-    public string name;
-    public string description;
+    public string name;           // ชื่อด่าน/level
+    public string description;    // ไม่ใช้
     public string levelId;
-    public string type;
-    public string subtype;
-    public bool isCustom;
-    public int score;
-    public string completedAt;
+    public string type;           // ประเภทเกม (facial, functional, phoneme, language)
+    public string subtype;        // ไม่ใช้
+    public bool isCustom;         // เป็น custom game หรือไม่
+    public int score;             // คะแนน (1-5)
+    public string completedAt;    // วันที่เล่น
 }

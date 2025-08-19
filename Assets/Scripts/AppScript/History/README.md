@@ -1,130 +1,182 @@
-# History System Documentation
+# History System Documentation (Updated)
 
-## ไฟล์ที่สร้างขึ้น
+## การเปลี่ยนแปลงใหม่
+
+### 1. Background Images
+- รองรับ 4 แบบสำหรับ 4 มินิเกม:
+  - **Index 0**: Facial Detection
+  - **Index 1**: Functional Speech  
+  - **Index 2**: Phoneme Practice
+  - **Index 3**: Language Therapy
+
+### 2. Star Display
+- เปลี่ยนจาก Array เป็น **Image เดียว**
+- แสดงดาวเต็ม/ดาวว่าง ตาม score > 0 หรือไม่
+
+### 3. Game Type Display
+- เปลี่ยนจาก Custom Indicator เป็น **Game Type Text**
+- แสดง: "Main Game" หรือ "Custom Game"
+
+### 4. Level Name
+- เพิ่มการแสดง **ชื่อด่าน** จากข้อมูล API
+
+## ไฟล์ที่อัปเดต
 
 ### 1. HistoryData.cs
-- Class สำหรับเก็บข้อมูลประวัติเกม
-- รองรับ: game category, date, compliment text, custom flag, star count, background image
+```csharp
+// เพิ่ม fields ใหม่
+public string levelName;      // ชื่อด่าน
+public string gameType;       // Main Game/Custom Game
 
-### 2. HistoryItem.cs  
-- Component สำหรับแสดงผลแต่ละ item ใน history list
-- รองรับการโหลดรูปภาพจาก URL
-- จัดการการแสดงดาวตามจำนวนที่ได้รับ
+// Helper methods
+GetGameCategoryFromType()     // แปลง type เป็น category
+GetBackgroundIndexFromType()  // เลือก background image
+```
+
+### 2. HistoryItem.cs
+```csharp
+// UI References ใหม่
+public TextMeshProUGUI levelNameText;  // ชื่อด่าน
+public TextMeshProUGUI gameTypeText;   // Main/Custom Game
+public Image starImage;                // ดาวเดียว (ไม่ใช่ array)
+public Sprite[] gameBackgrounds;       // 4 backgrounds
+
+// Methods ใหม่
+SetBackgroundImage()          // เลือก background ตาม game type
+UpdateStarDisplay()           // แสดงดาวเดียว
+```
 
 ### 3. History.cs
-- Main controller สำหรับจัดการ History page
-- รองรับการเรียก API และแสดง sample data
-- มีระบบ refresh และ scroll
+```csharp
+// ปรับ API conversion
+ConvertApiResponseToHistoryData()     // ใช้ข้อมูลใหม่จาก API
+AddNewHistoryItem()                   // เพิ่ม overload method
 
-## การตั้งค่าใน Unity
-
-### 1. สร้าง History Page UI
-
-#### Canvas Structure:
-```
-Canvas
-└── HistoryPage
-    ├── Header
-    │   ├── Title (Text: "Lastest History")
-    │   └── RefreshButton
-    ├── ScrollView
-    │   └── Viewport
-    │       └── Content (HistoryContainer)
-    └── LoadingText
+// Sample data ใหม่
+GetSampleHistoryData()                // ข้อมูลทดสอบแบบใหม่
 ```
 
-### 2. สร้าง History Item Prefab
+## การตั้งค่าใน Unity (อัปเดต)
 
-#### Prefab Structure:
+### 1. History Item Prefab Structure ใหม่:
 ```
 HistoryItemPrefab
 ├── BackgroundImage (Image)
-├── GameCategoryText (TextMeshPro)
-├── DateText (TextMeshPro) 
-├── ComplimentText (TextMeshPro)
-├── CustomIndicator (GameObject)
-│   └── CustomText (TextMeshPro)
-├── StarContainer
-│   ├── Star1 (Image)
-│   ├── Star2 (Image)
-│   ├── Star3 (Image)
-│   ├── Star4 (Image)
-│   └── Star5 (Image)
-└── StarCountText (TextMeshPro)
+├── GameCategoryText (TextMeshPro)      // "Facial Detection" etc.
+├── LevelNameText (TextMeshPro)         // "Level 1", "Custom Level" etc.
+├── DateText (TextMeshPro)              // "20/04/25"
+├── ComplimentText (TextMeshPro)        // "Great Job!"
+├── GameTypeText (TextMeshPro)          // "Main Game" / "Custom Game"
+├── StarImage (Image)                   // ดาวเดียว
+└── StarCountText (TextMeshPro)         // "5"
 ```
 
-### 3. Component Assignment
-
-#### History.cs:
-- historyContainer: Content GameObject ใน ScrollView
-- historyItemPrefab: HistoryItem Prefab
-- scrollRect: ScrollRect component
-- loadingText: Loading Text
-- refreshButton: Refresh Button
+### 2. Component Assignment (อัปเดต)
 
 #### HistoryItem.cs:
-- backgroundImage: Background Image
-- gameCategoryText: Game Category Text
-- dateText: Date Text  
-- complimentText: Compliment Text
-- customText: Custom Text
-- starCountText: Star Count Text
-- starImages: Array ของ Star Images (5 ตัว)
-- customIndicator: Custom Indicator GameObject
-- filledStarSprite: Sprite สำหรับดาวที่เต็ม
-- emptyStarSprite: Sprite สำหรับดาวที่ว่าง
-
-## การใช้งาน
-
-### 1. เรียกใช้ในสคริปต์อื่น:
 ```csharp
-// เพิ่ม history item ใหม่
-HistoryData newData = new HistoryData("Minigame - A", "21/04/25", "Perfect!", false, 5);
-historyScript.AddNewHistoryItem(newData);
+// Required assignments
+backgroundImage: Background Image
+gameCategoryText: Game Category Text
+levelNameText: Level Name Text        // ใหม่
+dateText: Date Text  
+complimentText: Compliment Text
+gameTypeText: Game Type Text          // เปลี่ยนจาก customText
+starCountText: Star Count Text
+starImage: Star Image                 // เปลี่ยนจาก starImages array
 
-// รีเฟรช history
-historyScript.RefreshHistory();
+// Background Images (ต้องลากใส่ 4 sprites)
+gameBackgrounds[0]: Facial Detection Background
+gameBackgrounds[1]: Functional Speech Background  
+gameBackgrounds[2]: Phoneme Practice Background
+gameBackgrounds[3]: Language Therapy Background
 
-// ดูจำนวน history
-int count = historyScript.GetHistoryCount();
+// Star sprites
+filledStarSprite: Filled Star Sprite
+emptyStarSprite: Empty Star Sprite
 ```
 
-### 2. การเชื่อมต่อ API:
-- แก้ไขใน method `CallHistoryAPI()` ใน History.cs
-- เปลี่ยน URL และปรับแต่ง JSON parsing ตาม API ของคุณ
+## API Data Format
 
-### 3. Sample Data Format:
+### Input จาก Server:
 ```json
 {
-  "historyList": [
+  "history": [
     {
-      "gameCategory": "Minigame - A",
-      "date": "20/04/25", 
-      "complimentText": "Great Job!",
-      "isCustom": false,
-      "starCount": 5,
-      "backgroundImageUrl": "https://example.com/image.jpg"
+      "id": "string",
+      "name": "Level 1",              // ชื่อด่าน
+      "description": "string",        // ไม่ใช้
+      "levelId": "string",
+      "type": "facial",               // ประเภทเกม
+      "subtype": "string",            // ไม่ใช้
+      "isCustom": false,              // Main/Custom
+      "score": 5,                     // คะแนน 1-5
+      "completedAt": "2025-04-20"     // วันที่
     }
-  ],
-  "success": true,
-  "message": "Success"
+  ]
 }
 ```
 
-## Features
+### Output ที่แสดง:
+- **Game Category**: "Facial Detection" (แปลงจาก type)
+- **Level Name**: "Level 1" (จาก name)
+- **Date**: "20/04/25" (แปลงจาก completedAt)
+- **Compliment**: "Excellent!" (แปลงจาก score)
+- **Game Type**: "Main Game" (แปลงจาก isCustom)
+- **Star**: แสดงดาวเต็ม/ว่าง ตาม score > 0
+- **Background**: เลือกจาก 4 แบบตาม type
 
-✅ แสดงข้อมูลประวัติตามรูปแบบที่กำหนด
-✅ รองรับการโหลดรูปภาพจาก URL  
-✅ ระบบดาวแบบ dynamic (1-5 ดวง)
-✅ แสดง Custom indicator
-✅ Scroll ได้และมี refresh
+## การใช้งาน (อัปเดต)
+
+### 1. เพิ่ม History Item ใหม่:
+```csharp
+// แบบง่าย
+historyScript.AddNewHistoryItem("facial", "Level 1", 5, false);
+
+// แบบเต็ม
+HistoryData newData = new HistoryData(
+    "Facial Detection", 
+    "Level 1", 
+    "20/04/25", 
+    "Perfect!", 
+    "Main Game", 
+    5
+);
+historyScript.AddNewHistoryItem(newData);
+```
+
+### 2. แปลง Game Type:
+```csharp
+string category = HistoryData.GetGameCategoryFromType("facial");
+// Result: "Facial Detection"
+
+int bgIndex = HistoryData.GetBackgroundIndexFromType("functional");  
+// Result: 1 (Functional Speech background)
+```
+
+## สิ่งที่ต้องทำใน Unity
+
+1. **สร้าง 4 Background Images** สำหรับแต่ละเกม
+2. **อัปเดต History Item Prefab** ตาม structure ใหม่
+3. **ลาก Sprites** ใส่ใน gameBackgrounds array
+4. **ลบ starImages array** และใช้ starImage เดียว
+5. **เพิ่ม levelNameText และ gameTypeText**
+6. **ลบ customIndicator** (ถ้ามี)
+
+## Game Type Mapping
+
+| API Type | Display Category |
+|----------|------------------|
+| facial | Facial Detection |
+| functional | Functional Speech |
+| phoneme | Phoneme Practice |
+| language | Language Therapy |
+
+## ข้อดีของการอัปเดต
+
+✅ รองรับ 4 มินิเกมด้วย background แยกกัน  
+✅ แสดงชื่อด่านชัดเจน  
+✅ ระบบดาวเรียบง่าย  
+✅ แสดง Main/Custom Game แทน true/false  
+✅ ตรงกับข้อมูล API ที่กำหนด  
 ✅ ใช้งานง่าย ไม่ซับซ้อน
-✅ รองรับ sample data และ API call
-✅ Error handling และ fallback
-
-## ปรับแต่งเพิ่มเติม
-
-1. **สีและ Theme**: แก้ไขสีใน HistoryItem.cs
-2. **ขนาดและ Spacing**: แก้ไขใน History.cs  
-3. **Animation**: เพิ่ม animation ใน HistoryItem.cs
-4. **API URL**: แก้ไขใน CallHistoryAPI() method

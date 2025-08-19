@@ -9,12 +9,19 @@ public class HistoryItem : MonoBehaviour
     [Header("UI References")]
     public Image backgroundImage;
     public TextMeshProUGUI gameCategoryText;
+    public TextMeshProUGUI levelNameText; // เพิ่มสำหรับชื่อด่าน
     public TextMeshProUGUI dateText;
     public TextMeshProUGUI complimentText;
-    public TextMeshProUGUI customText;
+    public TextMeshProUGUI gameTypeText; // เปลี่ยนจาก customText
     public TextMeshProUGUI starCountText;
-    public Image[] starImages; // Array ของรูปดาว
-    public GameObject customIndicator; // GameObject สำหรับแสดง custom indicator
+    public Image starImage; // เปลี่ยนจาก array เป็น Image เดียว
+    
+    [Header("Background Images for 4 Games")]
+    [Tooltip("Assign background sprites for each game type")]
+    public Sprite facialDetectionBackground;     // Background สำหรับ Facial Detection
+    public Sprite functionalSpeechBackground;    // Background สำหรับ Functional Speech
+    public Sprite phonemePracticeBackground;     // Background สำหรับ Phoneme Practice
+    public Sprite languageTherapyBackground;     // Background สำหรับ Language Therapy
     
     [Header("Star Settings")]
     public Sprite filledStarSprite;
@@ -38,6 +45,9 @@ public class HistoryItem : MonoBehaviour
         if (gameCategoryText != null)
             gameCategoryText.text = historyData.gameCategory;
             
+        if (levelNameText != null)
+            levelNameText.text = historyData.levelName;
+            
         if (dateText != null)
             dateText.text = historyData.date;
             
@@ -47,46 +57,75 @@ public class HistoryItem : MonoBehaviour
         if (starCountText != null)
             starCountText.text = historyData.starCount.ToString();
         
-        // Set custom indicator
-        if (customIndicator != null)
-            customIndicator.SetActive(historyData.isCustom);
-            
-        if (customText != null)
+        // Set game type (Main Game หรือ Custom Game)
+        if (gameTypeText != null)
         {
-            customText.text = historyData.isCustom ? "Custom" : "";
-            customText.gameObject.SetActive(historyData.isCustom);
+            gameTypeText.text = historyData.gameType;
+            gameTypeText.gameObject.SetActive(!string.IsNullOrEmpty(historyData.gameType));
         }
         
-        // Set background image
-        if (backgroundImage != null && historyData.backgroundImage != null)
-            backgroundImage.sprite = historyData.backgroundImage;
+        // Set background image based on game category
+        SetBackgroundImage();
         
-        // Set stars
+        // Set star display
         UpdateStarDisplay();
         
-        // Load background image from URL if needed
+        // Load background image from URL if needed (optional, จะใช้ local backgrounds แทน)
         if (!string.IsNullOrEmpty(historyData.backgroundImageUrl))
             StartCoroutine(LoadBackgroundFromURL(historyData.backgroundImageUrl));
     }
     
+    private void SetBackgroundImage()
+    {
+        if (backgroundImage == null) return;
+        
+        // เลือก background sprite ตาม game category
+        Sprite selectedBackground = GetBackgroundSpriteByCategory(historyData.gameCategory);
+        
+        if (selectedBackground != null)
+        {
+            backgroundImage.sprite = selectedBackground;
+            historyData.backgroundImage = selectedBackground;
+            Debug.Log($"Background set for {historyData.gameCategory}");
+        }
+        else
+        {
+            Debug.LogWarning($"No background sprite assigned for category: {historyData.gameCategory}. Please assign sprites in Inspector.");
+        }
+    }
+    
+    private Sprite GetBackgroundSpriteByCategory(string gameCategory)
+    {
+        if (string.IsNullOrEmpty(gameCategory)) return null;
+        
+        string category = gameCategory.ToLower();
+        
+        if (category.Contains("facial"))
+            return facialDetectionBackground;
+        else if (category.Contains("functional"))
+            return functionalSpeechBackground;
+        else if (category.Contains("phoneme"))
+            return phonemePracticeBackground;
+        else if (category.Contains("language"))
+            return languageTherapyBackground;
+        
+        // Default fallback
+        return facialDetectionBackground;
+    }
+    
     private void UpdateStarDisplay()
     {
-        if (starImages == null) return;
+        if (starImage == null) return;
         
-        for (int i = 0; i < starImages.Length; i++)
-        {
-            if (starImages[i] != null)
-            {
-                bool isActive = i < historyData.starCount;
-                
-                // Set sprite
-                if (filledStarSprite != null && emptyStarSprite != null)
-                    starImages[i].sprite = isActive ? filledStarSprite : emptyStarSprite;
-                
-                // Set color
-                starImages[i].color = isActive ? starActiveColor : starInactiveColor;
-            }
-        }
+        // แสดงดาวเต็มหรือดาวว่างตามจำนวน score
+        bool showFilledStar = historyData.starCount > 0;
+        
+        // Set sprite
+        if (filledStarSprite != null && emptyStarSprite != null)
+            starImage.sprite = showFilledStar ? filledStarSprite : emptyStarSprite;
+        
+        // Set color
+        starImage.color = showFilledStar ? starActiveColor : starInactiveColor;
     }
     
     private IEnumerator LoadBackgroundFromURL(string url)
@@ -115,7 +154,7 @@ public class HistoryItem : MonoBehaviour
     // Method สำหรับ click event (ถ้าต้องการ)
     public void OnItemClicked()
     {
-        Debug.Log($"History item clicked: {historyData.gameCategory} - {historyData.complimentText}");
+        Debug.Log($"History item clicked: {historyData.gameCategory} - Level: {historyData.levelName} - {historyData.complimentText}");
         // Add your click handling logic here
     }
 }
