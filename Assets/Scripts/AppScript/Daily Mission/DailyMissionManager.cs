@@ -10,20 +10,28 @@ public class DailyMissionManager : MonoBehaviour
     [Header("UI References")]
     public Transform missionContainer;
     public GameObject missionItemPrefab;
-    public Button backButton;
-    public Button settingsButton;
     public TextMeshProUGUI titleText;
 
-    [Header("Mission Settings")]
-    public DailyMissionData[] defaultMissions;
+    [Header("API Settings")]
+    public string baseURL = "https://api.mystrokeapi.uk";
+    public string getMissionsEndpoint = "/user/daily-mission";
 
     private List<DailyMissionData> currentMissions;
     private List<DailyMissionItem> missionItems;
 
-    // Events
-    public static event System.Action<DailyMissionData> OnMissionCompleted;
-    public static event System.Action<DailyMissionData> OnMissionClaimed;
-    public static event System.Action<int> OnPointsEarned;
+    // Events for UI feedback only
+    public static event System.Action OnPlayTimeUsed;
+    public static event System.Action OnFacialDetectionUsed;
+    public static event System.Action OnFunctionalSpeechUsed;
+
+    [Header("Star System (3 Stars)")]
+    public Image star1;
+    public Image star2;
+    public Image star3;
+
+    [Header("Star Sprites")]
+    public Sprite emptyStar;
+    public Sprite filledStar;
 
     private void Awake()
     {
@@ -33,81 +41,153 @@ public class DailyMissionManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeMissions();
         SetupUI();
-        LoadMissionProgress();
+        LoadMissionsFromServer();
+        SetupEventHandlers();
+        UpdateStarDisplay(0);
+    }
+
+    private void SetupEventHandlers()
+    {
+        // Subscribe to events for UI feedback
+        OnPlayTimeUsed += HandlePlayTimeFeedback;
+        OnFacialDetectionUsed += HandleFacialDetectionFeedback;
+        OnFunctionalSpeechUsed += HandleFunctionalSpeechFeedback;
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe from events
+        OnPlayTimeUsed -= HandlePlayTimeFeedback;
+        OnFacialDetectionUsed -= HandleFacialDetectionFeedback;
+        OnFunctionalSpeechUsed -= HandleFunctionalSpeechFeedback;
+    }
+
+    // ===== API Methods (merged from DailyMissionAPI) =====
+
+    public void LoadMissionsFromServer()
+    {
+        string url = baseURL + getMissionsEndpoint;
+
+        // Prepare headers with authorization
+        var headers = new Dictionary<string, string>();
+        string authToken = PlayerPrefs.GetString("authToken", "");
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            headers.Add("Authorization", "Bearer " + authToken);
+        }
+
+        StartCoroutine(HttpHelper.GetRequestCoroutine<DailyMissionList>(
+            url,
+            onSuccess: (response) =>
+            {
+                Debug.Log("Missions loaded from server successfully");
+                LoadMissionsFromJSON(JsonUtility.ToJson(response));
+            },
+            onError: (error, code) =>
+            {
+                Debug.LogError($"Failed to load missions from server: {error} (Code: {code})");
+                LoadLocalMissions();
+            },
+            additionalHeaders: headers
+        ));
+    }
+
+    private void LoadLocalMissions()
+    {
+        // Create sample JSON data as fallback with correct questTypes
+        string sampleJSON = @"{
+            ""dailyMission"": [
+                {
+                    ""id"": ""play_time_001"",
+                    ""questType"": ""play_time"",
+                    ""questDate"": null,
+                    ""targetCount"": 30,
+                    ""currentCount"": 15,
+                    ""isCompleted"": false,
+                    ""points"": 10
+                },
+                {
+                    ""id"": ""facial_detection_001"",
+                    ""questType"": ""facial_detection"",
+                    ""questDate"": null,
+                    ""targetCount"": 5,
+                    ""currentCount"": 2,
+                    ""isCompleted"": false,
+                    ""points"": 15
+                },
+                {
+                    ""id"": ""functional_speech_001"",
+                    ""questType"": ""functional_speech"",
+                    ""questDate"": null,
+                    ""targetCount"": 3,
+                    ""currentCount"": 3,
+                    ""isCompleted"": true,
+                    ""points"": 20
+                }
+            ]
+        }";
+
+        LoadMissionsFromJSON(sampleJSON);
+    }
+
+    // ===== Event Feedback Methods (merged from DailyMissionTracker) =====
+
+    public static void TriggerPlayTime()
+    {
+        OnPlayTimeUsed?.Invoke();
+        Debug.Log("Daily Mission Event: Play Time Used (UI feedback only)");
+    }
+
+    public static void TriggerFacialDetection()
+    {
+        OnFacialDetectionUsed?.Invoke();
+        Debug.Log("Daily Mission Event: Facial Detection Used (UI feedback only)");
+    }
+
+    public static void TriggerFunctionalSpeech()
+    {
+        OnFunctionalSpeechUsed?.Invoke();
+        Debug.Log("Daily Mission Event: Functional Speech Used (UI feedback only)");
+    }
+
+    private void HandlePlayTimeFeedback()
+    {
+        Debug.Log("UI Feedback: Play time tracked");
+        // Add UI animations, notifications, etc. here
+        RefreshMissionDisplay();
+    }
+
+    private void HandleFacialDetectionFeedback()
+    {
+        Debug.Log("UI Feedback: Facial detection used");
+        // Add UI animations, notifications, etc. here
+        RefreshMissionDisplay();
+    }
+
+    private void HandleFunctionalSpeechFeedback()
+    {
+        Debug.Log("UI Feedback: Functional speech used");
+        // Add UI animations, notifications, etc. here
+        RefreshMissionDisplay();
     }
 
     private void SetupUI()
     {
         if (titleText != null)
             titleText.text = "Daily Mission";
-
-        if (backButton != null)
-            backButton.onClick.AddListener(GoBack);
-
-        if (settingsButton != null)
-            settingsButton.onClick.AddListener(OpenSettings);
-    }
-
-    private void InitializeMissions()
-    {
-        // Load missions from JSON or create default missions
-        string savedMissions = PlayerPrefs.GetString("DailyMissions", "");
-        
-        if (!string.IsNullOrEmpty(savedMissions))
-        {
-            try
-            {
-                DailyMissionList missionList = JsonUtility.FromJson<DailyMissionList>(savedMissions);
-                currentMissions = new List<DailyMissionData>(missionList.dailyMission);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Failed to load saved missions: " + e.Message);
-                CreateDefaultMissions();
-            }
-        }
-        else
-        {
-            CreateDefaultMissions();
-        }
-
-        // Check if it's a new day and reset missions if needed
-        CheckAndResetDailyMissions();
-        
-        CreateMissionUI();
     }
 
     private void CreateDefaultMissions()
     {
         currentMissions.Clear();
-        
-        // Create default missions based on the image
-        currentMissions.Add(new DailyMissionData("facial_detection", "facial_detection", 2, 10));
-        currentMissions.Add(new DailyMissionData("minigame_play", "minigame", 4, 15));
-        currentMissions.Add(new DailyMissionData("productivity", "productivity", 15, 20));
-        
-        SaveMissionProgress();
-    }
 
-    private void CheckAndResetDailyMissions()
-    {
-        string lastResetDate = PlayerPrefs.GetString("LastMissionReset", "");
-        string todayDate = DateTime.Now.ToString("yyyy-MM-dd");
+        // Create default missions with correct questTypes
+        currentMissions.Add(new DailyMissionData("play_time_001", "play_time", 30, 10));
+        currentMissions.Add(new DailyMissionData("facial_detection_001", "facial_detection", 5, 15));
+        currentMissions.Add(new DailyMissionData("functional_speech_001", "functional_speech", 3, 20));
 
-        if (lastResetDate != todayDate)
-        {
-            // Reset all missions for new day
-            foreach (var mission in currentMissions)
-            {
-                mission.ResetProgress();
-                mission.questDate = DateTime.Now;
-            }
-            
-            PlayerPrefs.SetString("LastMissionReset", todayDate);
-            SaveMissionProgress();
-        }
+        CreateMissionUI();
     }
 
     private void CreateMissionUI()
@@ -125,6 +205,10 @@ public class DailyMissionManager : MonoBehaviour
         {
             CreateMissionItem(mission);
         }
+
+        // Update star display after creating UI
+        int completedCount = GetCompletedMissionsCount();
+        UpdateStarDisplay(completedCount);
     }
 
     private void CreateMissionItem(DailyMissionData missionData)
@@ -136,83 +220,9 @@ public class DailyMissionManager : MonoBehaviour
 
         if (missionItem != null)
         {
-            missionItem.SetupMission(missionData, OnMissionClaimedCallback);
+            missionItem.SetupMission(missionData); // No claim callback needed
             missionItems.Add(missionItem);
         }
-    }
-
-    public void UpdateMissionProgress(string questType, int amount = 1)
-    {
-        var mission = currentMissions.FirstOrDefault(m => m.questType == questType);
-        if (mission != null)
-        {
-            bool wasCompleted = mission.isCompleted;
-            mission.AddProgress(amount);
-            
-            // Update UI
-            var missionItem = missionItems.FirstOrDefault(m => 
-                m.transform.GetComponent<DailyMissionItem>() != null);
-            
-            // Find the correct mission item and update it
-            foreach (var item in missionItems)
-            {
-                // Update all items to refresh UI
-                item.UpdateProgress(mission.currentCount);
-            }
-
-            // Check if mission just completed
-            if (!wasCompleted && mission.isCompleted)
-            {
-                OnMissionCompleted?.Invoke(mission);
-                Debug.Log($"Mission {mission.questType} completed!");
-            }
-
-            SaveMissionProgress();
-        }
-    }
-
-    private void OnMissionClaimedCallback(DailyMissionData mission)
-    {
-        if (mission.CanClaim())
-        {
-            OnMissionClaimed?.Invoke(mission);
-            OnPointsEarned?.Invoke(mission.points);
-            
-            Debug.Log($"Mission claimed: {mission.questType}, Points earned: {mission.points}");
-            
-            // Here you can add logic to give rewards to player
-            // For example: PlayerManager.Instance.AddPoints(mission.points);
-        }
-    }
-
-    public void LoadMissionProgress()
-    {
-        // This method can be called to reload mission data from server
-        // For now, it loads from PlayerPrefs
-        string savedMissions = PlayerPrefs.GetString("DailyMissions", "");
-        if (!string.IsNullOrEmpty(savedMissions))
-        {
-            try
-            {
-                DailyMissionList missionList = JsonUtility.FromJson<DailyMissionList>(savedMissions);
-                currentMissions = new List<DailyMissionData>(missionList.dailyMission);
-                CreateMissionUI();
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Failed to load mission progress: " + e.Message);
-            }
-        }
-    }
-
-    public void SaveMissionProgress()
-    {
-        DailyMissionList missionList = new DailyMissionList();
-        missionList.dailyMission = currentMissions.ToArray();
-        
-        string json = JsonUtility.ToJson(missionList, true);
-        PlayerPrefs.SetString("DailyMissions", json);
-        PlayerPrefs.Save();
     }
 
     public void LoadMissionsFromJSON(string jsonData)
@@ -222,7 +232,10 @@ public class DailyMissionManager : MonoBehaviour
             DailyMissionList missionList = JsonUtility.FromJson<DailyMissionList>(jsonData);
             currentMissions = new List<DailyMissionData>(missionList.dailyMission);
             CreateMissionUI();
-            SaveMissionProgress();
+            
+            // Update star display based on completed missions
+            int completedCount = GetCompletedMissionsCount();
+            UpdateStarDisplay(completedCount);
         }
         catch (System.Exception e)
         {
@@ -252,37 +265,40 @@ public class DailyMissionManager : MonoBehaviour
         return currentMissions.Sum(m => m.points);
     }
 
-    private void GoBack()
+    public int GetCompletedMissionsCount()
     {
-        // Add your back navigation logic here
-        Debug.Log("Going back from Daily Mission");
-        // For example: SceneManager.LoadScene("MainMenu");
+        return currentMissions.Count(m => m.isCompleted);
     }
-
-    private void OpenSettings()
+    
+    public void RefreshMissionDisplay()
     {
-        // Add your settings logic here
-        Debug.Log("Opening settings");
-    }
-
-    private void OnDestroy()
-    {
-        SaveMissionProgress();
-    }
-
-    private void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
+        // Refresh all mission items UI
+        for (int i = 0; i < missionItems.Count && i < currentMissions.Count; i++)
         {
-            SaveMissionProgress();
+            if (missionItems[i] != null)
+            {
+                missionItems[i].SetupMission(currentMissions[i]);
+            }
         }
+
+        // Update star display
+        int completedCount = GetCompletedMissionsCount();
+        UpdateStarDisplay(completedCount);
+        
+        Debug.Log($"Mission display refreshed. Completed missions: {completedCount}/3");
     }
 
-    private void OnApplicationFocus(bool hasFocus)
+    public void UpdateStarDisplay(int completedMissions)
     {
-        if (!hasFocus)
-        {
-            SaveMissionProgress();
-        }
+        // Update 3-star system based on completed missions count
+        if (star1 != null)
+            star1.sprite = completedMissions >= 1 ? filledStar : emptyStar;
+        
+        if (star2 != null)
+            star2.sprite = completedMissions >= 2 ? filledStar : emptyStar;
+        
+        if (star3 != null)
+            star3.sprite = completedMissions >= 3 ? filledStar : emptyStar;
     }
+
 }

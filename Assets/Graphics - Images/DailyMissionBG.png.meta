@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9a4348f867d6c55448b6f54d07e56b48
+guid: 2c10a2551bf44fc4f90776c27c304665
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7862407382553855129
-    second: Daily missions box_0
+      213: -2066591142118141506
+    second: DailyMissionBG_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Daily missions box_0
+      name: DailyMissionBG_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 658
-        height: 1072
+        width: 329
+        height: 536
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 76bf773742e13e290800000000000000
-      internalID: -7862407382553855129
+      spriteID: eb154163e4ef153e0800000000000000
+      internalID: -2066591142118141506
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Daily missions box_0: -7862407382553855129
+      DailyMissionBG_0: -2066591142118141506
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

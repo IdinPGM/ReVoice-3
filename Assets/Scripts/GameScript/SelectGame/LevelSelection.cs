@@ -9,7 +9,6 @@ public class LevelSelection : MonoBehaviour
     [SerializeField] Button[] levelButtons; // Array of buttons for levels 1-15
     private string gameType;
     private float difficulty;
-    private string serverEndpoint = "/game/session/start";
 
     [System.Serializable]
     public class Stage

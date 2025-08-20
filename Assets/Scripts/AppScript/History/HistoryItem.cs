@@ -46,10 +46,10 @@ public class HistoryItem : MonoBehaviour
             gameCategoryText.text = historyData.gameCategory;
             
         if (levelNameText != null)
-            levelNameText.text = historyData.levelName;
+            levelNameText.text = $"Level: {historyData.levelName}";
             
         if (dateText != null)
-            dateText.text = historyData.date;
+            dateText.text = $"Date: {historyData.date}";
             
         if (complimentText != null)
             complimentText.text = historyData.complimentText;

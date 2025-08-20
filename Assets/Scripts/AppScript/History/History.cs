@@ -42,7 +42,6 @@ public class History : MonoBehaviour
             if (layoutGroup != null)
             {
                 layoutGroup.spacing = itemSpacing;
-                layoutGroup.childControlHeight = false; // เพิ่มเพื่อไม่ให้ย่อขนาด
                 layoutGroup.childForceExpandHeight = false; // เพิ่มเพื่อไม่ให้ขยายเต็ม
             }
         }
@@ -309,7 +308,7 @@ public class History : MonoBehaviour
             "Great Job!", "Well done!", "Impressive!", "Nice work!", "Very good!",
             "Good work!", "Solid effort!", "Keep it up!", "Nice progress!", "Well played!",
             "Nice try!", "Getting better!", "Keep practicing!", "Don't give up!", "Almost there!",
-            "Keep trying!", "You can do it!", "Stay motivated!", "Practice makes perfect!", "Keep going!",
+            "Keep trying!", "You can do it!", "Stay motivated!", "Perfect!", "Keep going!",
             "Good effort!", "Keep learning!", "Stay positive!", "Try again!", "Keep improving!"
         };
 

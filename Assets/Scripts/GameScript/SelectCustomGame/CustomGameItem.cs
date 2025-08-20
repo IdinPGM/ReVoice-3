@@ -13,7 +13,6 @@ public class CustomGameItem : MonoBehaviour, IPointerClickHandler
     [Header("UI References")]
     public Image backgroundImage;
     public TextMeshProUGUI gameNameText;
-    public TextMeshProUGUI dateText;
     public TextMeshProUGUI gameTypeText;
     public TextMeshProUGUI gameSubtypeText;
     
@@ -93,9 +92,6 @@ public class CustomGameItem : MonoBehaviour, IPointerClickHandler
         // Set text values
         if (gameNameText != null)
             gameNameText.text = gameData.name;
-            
-        if (dateText != null)
-            dateText.text = gameData.GetFormattedDate();
         
         // แสดง Game Type แยกต่างหาก
         if (gameTypeText != null)

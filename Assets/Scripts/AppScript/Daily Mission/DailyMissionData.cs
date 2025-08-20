@@ -39,29 +39,6 @@ public class DailyMissionData
         if (targetCount == 0) return 0f;
         return (float)currentCount / targetCount;
     }
-
-    public void AddProgress(int amount = 1)
-    {
-        if (isCompleted) return;
-        
-        currentCount += amount;
-        if (currentCount >= targetCount)
-        {
-            currentCount = targetCount;
-            isCompleted = true;
-        }
-    }
-
-    public void ResetProgress()
-    {
-        currentCount = 0;
-        isCompleted = false;
-    }
-
-    public bool CanClaim()
-    {
-        return isCompleted && currentCount >= targetCount;
-    }
 }
 
 [System.Serializable]

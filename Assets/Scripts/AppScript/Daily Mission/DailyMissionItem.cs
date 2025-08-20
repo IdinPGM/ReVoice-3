@@ -9,35 +9,30 @@ public class DailyMissionItem : MonoBehaviour
     public TextMeshProUGUI missionDescriptionText;
     public TextMeshProUGUI progressText;
     public Slider progressBar;
-    public Button claimButton;
     public Image starIcon;
     public Image backgroundImage;
+    public Image completeImage;
 
     [Header("Star Sprites")]
     public Sprite emptyStar;
     public Sprite filledStar;
 
-    [Header("Background Colors")]
-    public Color completedColor = new Color(0.2f, 0.4f, 0.8f, 1f); // Blue for completed
-    public Color inProgressColor = new Color(0.3f, 0.5f, 0.7f, 1f); // Darker blue for in progress
-    public Color defaultColor = new Color(0.4f, 0.6f, 0.8f, 1f); // Light blue for default
 
     private DailyMissionData missionData;
-    private System.Action<DailyMissionData> onClaimCallback;
 
-    public void SetupMission(DailyMissionData data, System.Action<DailyMissionData> claimCallback = null)
+    private void Start()
+    {
+        // // Initialize complete image to be hidden by default
+        // if (completeImage != null)
+        // {
+        //     completeImage.gameObject.SetActive(false);
+        // }
+    }
+
+    public void SetupMission(DailyMissionData data)
     {
         missionData = data;
-        onClaimCallback = claimCallback;
-
         UpdateUI();
-        
-        // Setup claim button
-        if (claimButton != null)
-        {
-            claimButton.onClick.RemoveAllListeners();
-            claimButton.onClick.AddListener(ClaimMission);
-        }
     }
 
     private void UpdateUI()
@@ -66,22 +61,11 @@ public class DailyMissionItem : MonoBehaviour
             starIcon.sprite = missionData.isCompleted ? filledStar : emptyStar;
         }
 
-        // Update background color
-        if (backgroundImage != null)
+        // Update complete image overlay
+        if (completeImage != null)
         {
-            if (missionData.isCompleted)
-                backgroundImage.color = completedColor;
-            else if (missionData.currentCount > 0)
-                backgroundImage.color = inProgressColor;
-            else
-                backgroundImage.color = defaultColor;
-        }
-
-        // Update claim button
-        if (claimButton != null)
-        {
-            claimButton.interactable = missionData.CanClaim();
-            claimButton.gameObject.SetActive(missionData.isCompleted);
+            // Debug.Log($"Mission {missionData.questType}: isCompleted = {missionData.isCompleted}");
+            completeImage.gameObject.SetActive(missionData.isCompleted);
         }
     }
 
@@ -89,12 +73,12 @@ public class DailyMissionItem : MonoBehaviour
     {
         switch (questType.ToLower())
         {
+            case "play_time":
+                return "Play Time";
             case "facial_detection":
                 return "Facial Detection";
-            case "minigame":
-                return "Minigame";
-            case "productivity":
-                return "Productivity";
+            case "functional_speech":
+                return "Functional Speech";
             default:
                 return questType;
         }
@@ -104,40 +88,14 @@ public class DailyMissionItem : MonoBehaviour
     {
         switch (questType.ToLower())
         {
+            case "play_time":
+                return "Play games for specified minutes";
             case "facial_detection":
-                return "ใช้ระบบการตรวจจับใบหน้าในวันนี้";
-            case "minigame":
-                return "เล่น Minigame\nจำนวนการเกมที่เล่นรวมต่อวัน";
-            case "productivity":
-                return "เล่น Minigame\nโดยได้แต้มความเป็นมืออาชีพต่อวัน";
+                return "Use facial detection feature";
+            case "functional_speech":
+                return "Complete functional speech exercises";
             default:
-                return "เสร็จสิ้นภารกิจประจำวัน";
-        }
-    }
-
-    private void ClaimMission()
-    {
-        if (missionData != null && missionData.CanClaim())
-        {
-            onClaimCallback?.Invoke(missionData);
-            
-            // Disable claim button after claiming
-            if (claimButton != null)
-                claimButton.interactable = false;
-        }
-    }
-
-    public void UpdateProgress(int newProgress)
-    {
-        if (missionData != null)
-        {
-            missionData.currentCount = newProgress;
-            if (missionData.currentCount >= missionData.targetCount)
-            {
-                missionData.currentCount = missionData.targetCount;
-                missionData.isCompleted = true;
-            }
-            UpdateUI();
+                return "Complete daily mission";
         }
     }
 }
