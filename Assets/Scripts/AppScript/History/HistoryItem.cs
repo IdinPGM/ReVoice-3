@@ -13,7 +13,7 @@ public class HistoryItem : MonoBehaviour
     public TextMeshProUGUI dateText;
     public TextMeshProUGUI complimentText;
     public TextMeshProUGUI gameTypeText; // เปลี่ยนจาก customText
-    public TextMeshProUGUI starCountText;
+    public TextMeshProUGUI score;
     public Image starImage; // เปลี่ยนจาก array เป็น Image เดียว
     
     [Header("Background Images for 4 Games")]
@@ -54,9 +54,9 @@ public class HistoryItem : MonoBehaviour
         if (complimentText != null)
             complimentText.text = historyData.complimentText;
             
-        if (starCountText != null)
-            starCountText.text = historyData.starCount.ToString();
-        
+        if (score != null)
+            score.text = historyData.score.ToString();
+
         // Set game type (Main Game หรือ Custom Game)
         if (gameTypeText != null)
         {
@@ -117,8 +117,7 @@ public class HistoryItem : MonoBehaviour
     {
         if (starImage == null) return;
         
-        // แสดงดาวเต็มหรือดาวว่างตามจำนวน score
-        bool showFilledStar = historyData.starCount > 0;
+        bool showFilledStar = historyData.score > 0;
         
         // Set sprite
         if (filledStarSprite != null && emptyStarSprite != null)

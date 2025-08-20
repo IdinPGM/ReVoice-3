@@ -103,7 +103,9 @@ public class History : MonoBehaviour
         StartCoroutine(HttpHelper.GetRequestCoroutine<ApiHistoryResponse>(
             "https://api.mystrokeapi.uk/user/history?page=1&limit=10",
             onSuccess: (response) => {
-                Debug.Log("History data received successfully.");
+                Debug.Log($"History API response received. Row count: {response.rowCount}");
+                Debug.Log($"Raw API response: {JsonUtility.ToJson(response, true)}");
+                
                 List<HistoryData> historyDataList = ConvertApiResponseToHistoryData(response.history);
                 UpdateHistoryDisplay(historyDataList);
                 FinishLoading(); // Handle loading state here
@@ -270,15 +272,20 @@ public class History : MonoBehaviour
         
         foreach (var item in apiItems)
         {
+            // Debug log สำหรับตรวจสอบข้อมูล
+            Debug.Log($"API Item: id={item.id}, name={item.name}, score={item.score}, type={item.type}");
+            
             // Convert API response to HistoryData format
             string gameCategory = HistoryData.GetGameCategoryFromType(item.type);
             string levelName = item.name ?? "Unknown Level";
             string date = FormatDate(item.completedAt);
             string complimentText = GetComplimentFromScore(item.score);
             string gameType = item.isCustom ? "Custom Game" : "Main Game";
-            int starCount = Mathf.Clamp(item.score, 0, 5);
+            int score = Mathf.Max(item.score, 0); // เปลี่ยนจาก starCount เป็น score
             
-            HistoryData historyData = new HistoryData(gameCategory, levelName, date, complimentText, gameType, starCount);
+            Debug.Log($"Converted to HistoryData: category={gameCategory}, level={levelName}, score={score}");
+            
+            HistoryData historyData = new HistoryData(gameCategory, levelName, date, complimentText, gameType, score);
             historyDataList.Add(historyData);
         }
         
@@ -329,12 +336,12 @@ public class ApiHistoryResponse
 public class ApiHistoryItem
 {
     public string id;
-    public string name;           // ชื่อด่าน/level
-    public string description;    // ไม่ใช้
+    public string name;          
+    public string description;    
     public string levelId;
-    public string type;           // ประเภทเกม (facial, functional, phoneme, language)
-    public string subtype;        // ไม่ใช้
-    public bool isCustom;         // เป็น custom game หรือไม่
-    public int score;             // คะแนน (1-5)
-    public string completedAt;    // วันที่เล่น
+    public string type;           
+    public string subtype;        
+    public bool isCustom;         
+    public int score;             
+    public string completedAt;    
 }

@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 9105142162630807143}
   - component: {fileID: 618356521560572486}
   m_Layer: 5
-  m_Name: Point
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -817,7 +817,7 @@ MonoBehaviour:
   dateText: {fileID: 2913449735593599100}
   complimentText: {fileID: 3100871019671904566}
   gameTypeText: {fileID: 4202191910752645552}
-  starCountText: {fileID: 618356521560572486}
+  score: {fileID: 618356521560572486}
   starImage: {fileID: 5623874592986887051}
   facialDetectionBackground: {fileID: -9004776028785118094, guid: a9eb16e02fe6f9f46bfab434ed893700, type: 3}
   functionalSpeechBackground: {fileID: -2659359828992680722, guid: 146f784acc8091e4d8f14397af170c68, type: 3}

@@ -61,6 +61,7 @@ public abstract class BaseSpeechGame : MonoBehaviour
     public class EndSessionResponse
     {
         public string message;
+        public int score;
     }
 
     protected Stage[] stages;
@@ -149,6 +150,9 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
         // Reset UI state
         ResetUIState();
+
+        // อัพเดท Progress Bar
+        UpdateProgressBar();
 
         // เล่นเสียง targetText โดยอัตโนมัติเมื่อโหลด stage
         StartCoroutine(PlayTargetTextWithDelay(1f));
@@ -485,7 +489,6 @@ public abstract class BaseSpeechGame : MonoBehaviour
             Debug.Log($"{GameName} completed!");
             // Stop webcam and navigate to GameComplete
             OnGameCompleted();
-            SceneManager.LoadScene("GameComplete");
             return;
         }
         
@@ -509,7 +512,6 @@ public abstract class BaseSpeechGame : MonoBehaviour
             Debug.Log($"{GameName} completed!");
             // Stop webcam and navigate to Home
             OnGameCompleted();
-            SceneManager.LoadScene("Home");
             return;
         }
         
@@ -548,9 +550,16 @@ public abstract class BaseSpeechGame : MonoBehaviour
             requestData,
             onSuccess: (response) => {
                 Debug.Log($"Game session ended successfully: {response.message}");
+                Debug.Log($"Final score: {response.score}");
+                // เก็บ score ลง PlayerPrefs สำหรับใช้ใน GameComplete scene
+                PlayerPrefs.SetInt("GameScore", response.score);
+                PlayerPrefs.Save();
             },
             onError: (error, code) => {
                 Debug.LogError($"Failed to end game session: {error}, Code: {code}");
+                // กรณีเกิดข้อผิดพลาด ให้ score เป็น 0
+                PlayerPrefs.SetInt("GameScore", 0);
+                PlayerPrefs.Save();
             },
             additionalHeaders: headers
         ));
@@ -558,12 +567,26 @@ public abstract class BaseSpeechGame : MonoBehaviour
 
     protected virtual void OnGameCompleted()
     {
+        UpdateProgressBar();
         PlaySFX(sfxGameComplete);
-
         EndGameSession();
-        Debug.Log($"{GameName} game completed. Stopping all cameras.");
-        // หยุดกล้องจาก CameraSwitcher
+        Debug.Log($"{gameObject.name} game completed.");
+        Destroy(nextButton.gameObject);
+        Destroy(skipButton.gameObject);
+        // หน่วงเวลาก่อนย้ายไป Scene GameComplete
+        StartCoroutine(DelayedSceneTransition());
+    }
+    
+    protected virtual IEnumerator DelayedSceneTransition()
+    {
+        // หน่วงเวลา 2 วินาที (กล้องยังทำงานอยู่)
+        yield return new WaitForSeconds(1.5f);
+
+        // หยุดกล้องก่อนเปลี่ยน Scene
         StopAllCameras();
+        Debug.Log("All cameras stopped before scene transition.");
+
+        SceneManager.LoadScene("GameComplete");
     }
 
     private void StopAllCameras()
@@ -610,5 +633,17 @@ public abstract class BaseSpeechGame : MonoBehaviour
     {
         if (audioSource != null && clip != null)
             audioSource.PlayOneShot(clip);
+    }
+
+    // Method สำหรับอัพเดท Progress Bar
+    protected virtual void UpdateProgressBar()
+    {
+        // หา ProgressBar component ในฉาก
+        ProgressBar progressBar = FindFirstObjectByType<ProgressBar>();
+        if (progressBar != null)
+        {
+            progressBar.UpdateProgress();
+            Debug.Log($"{GameName}: Progress bar updated");
+        }
     }
 }

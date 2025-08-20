@@ -10,7 +10,7 @@ public class HistoryData
     public string date;
     public string complimentText;
     public string gameType; // Main Game หรือ Custom Game
-    public int starCount;
+    public int score;
     
     [Header("Visual")]
     public Sprite backgroundImage;
@@ -23,19 +23,19 @@ public class HistoryData
         date = "";
         complimentText = "";
         gameType = "Main Game";
-        starCount = 0;
+        score = 0;
         backgroundImage = null;
         backgroundImageUrl = "";
     }
     
-    public HistoryData(string category, string level, string gameDate, string compliment, string type, int stars, string bgImageUrl = "")
+    public HistoryData(string category, string level, string gameDate, string compliment, string type, int scores, string bgImageUrl = "")
     {
         gameCategory = category;
         levelName = level;
         date = gameDate;
         complimentText = compliment;
         gameType = type;
-        starCount = Mathf.Clamp(stars, 0, 5); // จำกัดดาวไม่เกิน 5 ดวง
+        score = scores;
         backgroundImageUrl = bgImageUrl;
     }
     

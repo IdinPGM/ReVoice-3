@@ -54,6 +54,7 @@ public class FacialDetection : MonoBehaviour
     public class EndSessionResponse
     {
         public string message;
+        public int score;
     }
 
     private Stage[] stages;
@@ -137,6 +138,9 @@ public class FacialDetection : MonoBehaviour
         skipButton.gameObject.SetActive(false);
         feedbackText.gameObject.SetActive(false);
         feedbackBox.gameObject.SetActive(false);
+
+        // อัพเดท Progress Bar
+        UpdateProgressBar();
 
         // Start facial detection
         StartFacialDetection();
@@ -292,7 +296,6 @@ public class FacialDetection : MonoBehaviour
         {
             Debug.Log("Game completed!");
             OnGameCompleted();
-            SceneManager.LoadScene("GameComplete");
             return;
         }
 
@@ -317,7 +320,6 @@ public class FacialDetection : MonoBehaviour
         {
             Debug.Log("Game completed!");
             OnGameCompleted();
-            SceneManager.LoadScene("Home");
             return;
         }
 
@@ -376,9 +378,16 @@ public class FacialDetection : MonoBehaviour
             requestData,
             onSuccess: (response) => {
                 Debug.Log($"Game session ended successfully: {response.message}");
+                Debug.Log($"Final score: {response.score}");
+                // เก็บ score ลง PlayerPrefs สำหรับใช้ใน GameComplete scene
+                PlayerPrefs.SetInt("GameScore", response.score);
+                PlayerPrefs.Save();
             },
             onError: (error, code) => {
                 Debug.LogError($"Failed to end game session: {error}, Code: {code}");
+                // กรณีเกิดข้อผิดพลาด ให้ score เป็น 0
+                PlayerPrefs.SetInt("GameScore", 0);
+                PlayerPrefs.Save();
             },
             additionalHeaders: headers
         ));
@@ -386,13 +395,27 @@ public class FacialDetection : MonoBehaviour
 
     protected virtual void OnGameCompleted()
     {
+        UpdateProgressBar();
         PlaySFX(sfxGameComplete);
-
         EndGameSession();
-        Debug.Log($"{gameObject.name} game completed. Stopping all cameras.");
-        // หยุดการทำงานของกล้องทั้งหมด
-        StopAllCameras();
+        Debug.Log($"{gameObject.name} game completed.");
+        Destroy(skipButton.gameObject);
+        // หน่วงเวลาก่อนย้ายไป Scene GameComplete
+        StartCoroutine(DelayedSceneTransition());
     }
+    
+    protected virtual IEnumerator DelayedSceneTransition()
+    {
+        // หน่วงเวลา 2 วินาที (กล้องยังทำงานอยู่)
+        yield return new WaitForSeconds(1.5f);
+
+        // หยุดกล้องก่อนเปลี่ยน Scene
+        StopAllCameras();
+        Debug.Log("All cameras stopped before scene transition.");
+
+        SceneManager.LoadScene("GameComplete");
+    }
+
 
     private void StopAllCameras()
     {
@@ -421,6 +444,18 @@ public class FacialDetection : MonoBehaviour
     {
         if (audioSource != null && clip != null)
             audioSource.PlayOneShot(clip);
+    }
+    
+    // Method สำหรับอัพเดท Progress Bar
+    private void UpdateProgressBar()
+    {
+        // หา ProgressBar component ในฉาก
+        ProgressBar progressBar = FindFirstObjectByType<ProgressBar>();
+        if (progressBar != null)
+        {
+            progressBar.UpdateProgress();
+            Debug.Log("Facial Detection: Progress bar updated");
+        }
     }
     
     // Method สำหรับเริ่มเกม custom
